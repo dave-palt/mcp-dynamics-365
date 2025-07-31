@@ -52,8 +52,7 @@ export class D365AuthService {
         error.response?.data || error.message
       );
       throw new Error(
-        `Authentication failed: ${
-          error.response?.data?.error_description || error.message
+        `Authentication failed: ${error.response?.data?.error_description || error.message
         }`
       );
     }
