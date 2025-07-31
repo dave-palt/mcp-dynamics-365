@@ -135,6 +135,13 @@ export class D365MCPServer {
   }
 
   private getAvailableTools(): Tool[] {
+    // NAMING CONVENTION GUIDE:
+    // 📋 Metadata operations (get_entity_schema, get_attribute_schema): 
+    //    Use entityName parameter with SINGULAR entity logical names (e.g., "contact", "account", "opportunity")
+    // 📊 Data operations (query_entities, get_entity, create_entity, etc.): 
+    //    Use entitySet parameter with PLURAL entity set names (e.g., "contacts", "accounts", "opportunities")
+    // 🔍 OData queries: Use PLURAL entity set names in the query URL path
+
     return [
       {
         name: "get_entity_schema",
@@ -146,7 +153,7 @@ export class D365MCPServer {
             entityName: {
               type: "string",
               description:
-                'The name of the entity (e.g., "contacts", "accounts", "opportunities")',
+                'The entity logical name (singular form, e.g., "contact", "account", "opportunity") - NOT the entity set name',
             },
             includeAttributes: {
               type: "boolean",
@@ -168,12 +175,12 @@ export class D365MCPServer {
             entityName: {
               type: "string",
               description:
-                'The name of the entity (e.g., "product", "contact", "account")',
+                'The entity logical name (singular form, e.g., "contact", "account", "product") - NOT the entity set name',
             },
             attributeName: {
               type: "string",
               description:
-                'The logical name of the attribute (e.g., "statecode", "statuscode", "name")',
+                'The logical name of the attribute (e.g., "statecode", "statuscode", "firstname")',
             },
           },
           required: ["entityName", "attributeName"],
@@ -203,7 +210,7 @@ export class D365MCPServer {
           properties: {
             entitySet: {
               type: "string",
-              description: 'The entity set name (e.g., "contacts", "accounts")',
+              description: 'The entity set name (plural form for data operations, e.g., "contacts", "accounts", "opportunities")',
             },
             select: {
               type: "array",
@@ -245,7 +252,7 @@ export class D365MCPServer {
           properties: {
             entitySet: {
               type: "string",
-              description: "The entity set name",
+              description: "The entity set name (plural form for data operations, e.g., \"contacts\", \"accounts\")",
             },
             id: {
               type: "string",
@@ -268,7 +275,7 @@ export class D365MCPServer {
           properties: {
             entitySet: {
               type: "string",
-              description: "The entity set name",
+              description: "The entity set name (plural form for data operations, e.g., \"contacts\", \"accounts\")",
             },
             data: {
               type: "object",
@@ -286,7 +293,7 @@ export class D365MCPServer {
           properties: {
             entitySet: {
               type: "string",
-              description: "The entity set name",
+              description: "The entity set name (plural form for data operations, e.g., \"contacts\", \"accounts\")",
             },
             id: {
               type: "string",
@@ -308,7 +315,7 @@ export class D365MCPServer {
           properties: {
             entitySet: {
               type: "string",
-              description: "The entity set name",
+              description: "The entity set name (plural form for data operations, e.g., \"contacts\", \"accounts\")",
             },
             id: {
               type: "string",
@@ -327,7 +334,7 @@ export class D365MCPServer {
             query: {
               type: "string",
               description:
-                "The OData query string (e.g., \"contacts?$filter=firstname eq 'John'\")",
+                "The OData query string using entity set names (plural form, e.g., \"contacts?$filter=firstname eq 'John'\")",
             },
           },
           required: ["query"],

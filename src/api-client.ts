@@ -530,7 +530,7 @@ export class D365ApiClient {
         result.functions = functionsResponse.data.value || [];
         result.summary.totalFunctions = result.functions.length;
       } catch (e) {
-        console.log("Could not fetch function definitions");
+        console.log("Could not fetch function definitions", e);
       }
 
       try {

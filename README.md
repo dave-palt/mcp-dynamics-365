@@ -165,19 +165,24 @@ Add to your `claude_desktop_config.json`:
 
 ## Available Tools
 
+> **📋 Naming Convention**:
+>
+> - **Metadata operations** (`get_entity_schema`, `get_attribute_schema`): Use **singular** entity logical names (e.g., `"contact"`, `"account"`)
+> - **Data operations** (`query_entities`, `get_entity`, `create_entity`, etc.): Use **plural** entity set names (e.g., `"contacts"`, `"accounts"`)
+
 ### 1. `get_entity_schema`
 
 Get the schema/metadata for a specific Dynamics 365 entity.
 
 **Parameters:**
 
-- `entityName` (string): The name of the entity (e.g., "contacts", "accounts")
+- `entityName` (string): The entity logical name in singular form (e.g., "contact", "account")
 
 **Example:**
 
 ```json
 {
-  "entityName": "contacts"
+  "entityName": "contact"
 }
 ```
 

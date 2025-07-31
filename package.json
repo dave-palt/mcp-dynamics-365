@@ -18,6 +18,7 @@
     "lint": "tsc --noEmit",
     "typecheck": "tsc --noEmit",
     "test": "node test-server.js",
+    "test:read-tools": "npm run build && node test-read-tools.js",
     "prepublishOnly": "npm run clean && npm run build",
     "publish:npm": "npm publish",
     "publish:vscode": "cd vscode-extension && npm install && npm run compile && npx @vscode/vsce package && npx @vscode/vsce publish",
