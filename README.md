@@ -72,16 +72,82 @@ pnpm build
 pnpm start
 ```
 
-## MCP Configuration
+## MCP Integration
 
-Add the server to your MCP configuration file (e.g., VS Code's `mcp.json`):
+### Prerequisites
+
+1. **Install the MCP server globally**: `npm install -g @dav3/mcp-dynamics365-server`
+
+### Option 1: Manual Configuration (Recommended)
+
+The standard approach is to add the server to your MCP client configuration:
+
+1. **Add to your MCP client configuration** (see examples below)
+
+### Option 2: VS Code Extension (Alternative)
+
+If you prefer not to manage JSON configuration files, there's a VS Code extension available:
+
+1. **Install the VS Code extension**: `dav3.mcp-dynamics365-extension`
+2. **Configure credentials**: Use the "Configure MCP Dynamics 365 Server" command
+
+**Note**: The extension approach only works if you don't have an existing MCP configuration file, as configuration files take precedence over extension-registered servers.
+
+## Configuration Examples
+
+#### For VS Code
+
+Add to your `mcp.json` or `settings.json`:
+
+**mcp.json** (personally tested)
+
+```json
+{
+  "servers": {
+    "dynamics365-crm": {
+      "command": "npx",
+      "args": ["@dav3/mcp-dynamics365-server"],
+      "env": {
+        "D365_CLIENT_ID": "your_client_id",
+        "D365_CLIENT_SECRET": "your_client_secret",
+        "D365_TENANT_ID": "your_tenant_id",
+        "D365_BASE_URL": "https://your-org.crm.dynamics.com",
+        "D365_RESOURCE": "https://your-org.crm.dynamics.com"
+      }
+    }
+  },
+  "inputs": []
+}
+```
+
+**settings.json** (untested)
+
+````json
+{
+  "mcp.servers": {
+    "dynamics365": {
+      "command": "npx",
+      "args": ["@dav3/mcp-dynamics365-server"],
+      "env": {
+        "D365_CLIENT_ID": "your_client_id",
+        "D365_CLIENT_SECRET": "your_client_secret",
+        "D365_TENANT_ID": "your_tenant_id",
+        "D365_BASE_URL": "https://your-org.crm.dynamics.com",
+        "D365_RESOURCE": "https://your-org.crm.dynamics.com"
+      }
+    }
+  }
+}
+```#### For Claude Desktop
+
+Add to your `claude_desktop_config.json`:
 
 ```json
 {
   "mcpServers": {
     "dynamics365-crm": {
-      "command": "node",
-      "args": ["path/to/mcp-dynamics365/dist/index.js"],
+      "command": "npx",
+      "args": ["@dav3/mcp-dynamics365-server"],
       "env": {
         "D365_BASE_URL": "https://your-org.crm.dynamics.com",
         "D365_CLIENT_ID": "your-client-id",
@@ -92,21 +158,9 @@ Add the server to your MCP configuration file (e.g., VS Code's `mcp.json`):
     }
   }
 }
-```
+````
 
-Alternatively, you can use a `.env` file and reference it in the configuration:
-
-```json
-{
-  "mcpServers": {
-    "dynamics365-crm": {
-      "command": "node",
-      "args": ["path/to/mcp-dynamics365/dist/index.js"],
-      "cwd": "path/to/mcp-dynamics365"
-    }
-  }
-}
-```
+**Note:** Environment variables must be explicitly specified in the MCP configuration. The server does not automatically load `.env` files when run via MCP clients.
 
 ## Available Tools
 

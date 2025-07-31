@@ -17,9 +17,19 @@
     "microsoft",
     "model-context-protocol"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onStartupFinished",
+    "onCommand:workbench.action.chat.open",
+    "onView:chat"
+  ],
   "main": "./out/extension.js",
   "contributes": {
+    "mcpServerDefinitionProviders": [
+      {
+        "id": "dynamics365-mcp-server",
+        "label": "Dynamics 365 MCP Server"
+      }
+    ],
     "configuration": {
       "title": "MCP Dynamics 365",
       "properties": {
@@ -32,6 +42,26 @@
           "type": "boolean",
           "default": false,
           "description": "Automatically start the MCP server when VS Code starts"
+        },
+        "mcpDynamics365.clientId": {
+          "type": "string",
+          "description": "Dynamics 365 Client ID (Azure AD App Registration)"
+        },
+        "mcpDynamics365.clientSecret": {
+          "type": "string",
+          "description": "Dynamics 365 Client Secret (Azure AD App Registration)"
+        },
+        "mcpDynamics365.tenantId": {
+          "type": "string",
+          "description": "Dynamics 365 Tenant ID (Azure AD Directory)"
+        },
+        "mcpDynamics365.baseUrl": {
+          "type": "string",
+          "description": "Dynamics 365 Base URL (e.g., https://your-org.crm.dynamics.com)"
+        },
+        "mcpDynamics365.resource": {
+          "type": "string",
+          "description": "Dynamics 365 Resource URL (usually same as Base URL)"
         }
       }
     },
