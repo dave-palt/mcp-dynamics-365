@@ -1,0 +1,69 @@
+name: CI
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [18, 20]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: '9.15.9'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run type check
+        run: pnpm run typecheck
+
+      - name: Build project
+        run: pnpm run build
+
+      - name: Run tests
+        run: pnpm run test
+
+  test-vscode-extension:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install extension dependencies
+        run: |
+          cd vscode-extension
+          npm install
+
+      - name: Compile extension
+        run: |
+          cd vscode-extension
+          npm run compile
+
+      - name: Package extension (test)
+        run: |
+          cd vscode-extension
+          npm install -g vsce
+          vsce package

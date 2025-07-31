@@ -1,0 +1,86 @@
+name: Manual Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_type:
+        description: 'Version bump type'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+      publish_npm:
+        description: 'Publish to NPM'
+        required: true
+        default: true
+        type: boolean
+      publish_vscode:
+        description: 'Publish to VS Code Marketplace'
+        required: true
+        default: true
+        type: boolean
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    environment: release
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: '9.15.9'
+
+      - name: Configure git
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Bump version
+        run: |
+          pnpm version ${{ github.event.inputs.version_type }}
+          cd vscode-extension
+          npm version ${{ github.event.inputs.version_type }}
+          cd ..
+
+      - name: Build project
+        run: pnpm run build
+
+      - name: Run tests
+        run: pnpm run test
+
+      - name: Publish to NPM
+        if: ${{ github.event.inputs.publish_npm == 'true' }}
+        run: pnpm publish --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Compile and publish VS Code extension
+        if: ${{ github.event.inputs.publish_vscode == 'true' }}
+        run: |
+          npm install -g vsce
+          cd vscode-extension
+          npm install
+          npm run compile
+          vsce publish -p ${{ secrets.VSCODE_PAT }}
+
+      - name: Push version changes
+        run: |
+          git push origin master
+          git push origin --tags

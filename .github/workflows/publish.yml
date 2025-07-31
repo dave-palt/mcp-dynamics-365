@@ -1,0 +1,72 @@
+name: Publish NPM Package and VS Code Extension
+
+on:
+  push:
+    tags:
+      - 'v*'  # Triggers on version tags like v1.0.0, v1.2.3, etc.
+
+jobs:
+  publish-npm:
+    runs-on: ubuntu-latest
+    environment: release
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: '9.15.9'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build project
+        run: pnpm run build
+
+      - name: Run tests
+        run: pnpm run test
+
+      - name: Publish to NPM
+        run: pnpm publish --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  publish-vscode:
+    runs-on: ubuntu-latest
+    environment: release
+    needs: publish-npm  # Wait for NPM to publish first
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install vsce
+        run: npm install -g vsce
+
+      - name: Install extension dependencies
+        run: |
+          cd vscode-extension
+          npm install
+
+      - name: Compile extension
+        run: |
+          cd vscode-extension
+          npm run compile
+
+      - name: Publish to VS Code Marketplace
+        run: |
+          cd vscode-extension
+          vsce publish -p ${{ secrets.VSCODE_PAT }}
+        env:
+          VSCE_PAT: ${{ secrets.VSCODE_PAT }}
