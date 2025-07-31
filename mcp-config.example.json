@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "dynamics365-crm": {
+      "command": "node",
+      "args": ["/Users/user/Documents/projects/mcp-dynamics365/dist/index.js"],
+      "env": {
+        "D365_BASE_URL": "https://your-org.crm.dynamics.com",
+        "D365_CLIENT_ID": "your-client-id",
+        "D365_CLIENT_SECRET": "your-client-secret",
+        "D365_TENANT_ID": "your-tenant-id",
+        "D365_RESOURCE": "https://your-org.crm.dynamics.com"
+      }
+    }
+  }
+}

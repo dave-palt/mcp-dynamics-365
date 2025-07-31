@@ -1,0 +1,97 @@
+{
+  "name": "mcp-dynamics365-extension",
+  "displayName": "MCP Dynamics 365 Server",
+  "description": "VS Code extension for MCP Dynamics 365 server configuration (AI-generated side project)",
+  "version": "1.0.0",
+  "publisher": "dav3",
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "mcp",
+    "dynamics365",
+    "crm",
+    "microsoft",
+    "model-context-protocol"
+  ],
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "contributes": {
+    "configuration": {
+      "title": "MCP Dynamics 365",
+      "properties": {
+        "mcpDynamics365.serverPath": {
+          "type": "string",
+          "default": "npx @dav3/mcp-dynamics365-server",
+          "description": "Path to the MCP Dynamics 365 server executable"
+        },
+        "mcpDynamics365.autoStart": {
+          "type": "boolean",
+          "default": false,
+          "description": "Automatically start the MCP server when VS Code starts"
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "mcpDynamics365.start",
+        "title": "Start MCP Dynamics 365 Server",
+        "category": "MCP"
+      },
+      {
+        "command": "mcpDynamics365.stop",
+        "title": "Stop MCP Dynamics 365 Server",
+        "category": "MCP"
+      },
+      {
+        "command": "mcpDynamics365.restart",
+        "title": "Restart MCP Dynamics 365 Server",
+        "category": "MCP"
+      },
+      {
+        "command": "mcpDynamics365.configure",
+        "title": "Configure MCP Dynamics 365 Server",
+        "category": "MCP"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "mcpDynamics365.start"
+        },
+        {
+          "command": "mcpDynamics365.stop"
+        },
+        {
+          "command": "mcpDynamics365.restart"
+        },
+        {
+          "command": "mcpDynamics365.configure"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.74.0",
+    "@types/node": "^18.x",
+    "typescript": "^5.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dave-palt/mcp-dynamics-365.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dave-palt/mcp-dynamics-365/issues"
+  },
+  "homepage": "https://github.com/dave-palt/mcp-dynamics-365#readme",
+  "author": "Dav3 <mcp-dynamics-365@dav3.cc>",
+  "license": "MIT"
+}

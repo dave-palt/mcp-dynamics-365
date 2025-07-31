@@ -1,0 +1,42 @@
+# Source files
+src/
+*.ts
+!dist/**/*.d.ts
+
+# Development files
+test-server.js
+.env*
+.env.example
+mcp-config.example.json
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Dependencies
+node_modules/
+
+# Build artifacts
+*.tsbuildinfo
+
+# Testing
+coverage/
+test/
+tests/
+__tests__/
+
+# Documentation (keep README.md)
+EXAMPLES.md
+
+# Lock files
+pnpm-lock.yaml
+yarn.lock
+package-lock.json

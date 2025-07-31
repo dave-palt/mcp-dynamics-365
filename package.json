@@ -1,0 +1,66 @@
+{
+  "name": "@dav3/mcp-dynamics365-server",
+  "version": "1.0.0",
+  "description": "Generic MCP server for Dynamics 365 CRM operations (AI-generated side project with limited maintenance)",
+  "main": "dist/index.js",
+  "type": "module",
+  "bin": {
+    "mcp-dynamics365-server": "dist/index.js"
+  },
+  "packageManager": "pnpm@9.15.9",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/index.ts",
+    "start": "node dist/index.js",
+    "watch": "tsc --watch",
+    "watch:dev": "tsx watch src/index.ts",
+    "clean": "rm -rf dist",
+    "lint": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
+    "test": "node test-server.js",
+    "prepublishOnly": "npm run clean && npm run build",
+    "publish:npm": "npm publish",
+    "publish:vscode": "cd vscode-extension && npm install && npm run compile && npx vsce package && npx vsce publish"
+  },
+  "keywords": [
+    "mcp",
+    "dynamics365",
+    "crm",
+    "microsoft",
+    "model-context-protocol",
+    "ai",
+    "assistant"
+  ],
+  "author": "Dav3 <mcp-dynamics-365@dav3.cc>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dave-palt/mcp-dynamics-365.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dave-palt/mcp-dynamics-365/issues"
+  },
+  "homepage": "https://github.com/dave-palt/mcp-dynamics-365#readme",
+  "files": [
+    "dist/**/*",
+    "README.md",
+    "LICENSE",
+    "package.json"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^0.5.0",
+    "axios": "^1.6.0",
+    "dotenv": "^16.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.0.0"
+  }
+}
