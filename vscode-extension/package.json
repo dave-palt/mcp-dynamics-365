@@ -107,11 +107,13 @@
   "scripts": {
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./"
+    "watch": "tsc -watch -p ./",
+    "package": "npm run compile && npx @vscode/vsce package",
+    "publish": "npm run compile && npx @vscode/vsce publish"
   },
   "devDependencies": {
     "@types/vscode": "^1.74.0",
-    "@types/node": "^18.x",
+    "@types/node": "^20.x",
     "typescript": "^5.0.0"
   },
   "repository": {

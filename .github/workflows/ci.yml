@@ -12,7 +12,7 @@ jobs:
     
     strategy:
       matrix:
-        node-version: [18, 20]
+        node-version: [20]
 
     steps:
       - name: Checkout code
@@ -50,7 +50,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
 
       - name: Install extension dependencies
         run: |
@@ -65,5 +65,5 @@ jobs:
       - name: Package extension (test)
         run: |
           cd vscode-extension
-          npm install -g vsce
+          npm install -g @vscode/vsce
           vsce package

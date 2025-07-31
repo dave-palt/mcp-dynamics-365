@@ -16,7 +16,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
           registry-url: 'https://registry.npmjs.org'
 
       - name: Setup pnpm
@@ -49,10 +49,10 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
 
       - name: Install vsce
-        run: npm install -g vsce
+        run: npm install -g @vscode/vsce
 
       - name: Install extension dependencies
         run: |
@@ -68,5 +68,3 @@ jobs:
         run: |
           cd vscode-extension
           vsce publish -p ${{ secrets.VSCODE_PAT }}
-        env:
-          VSCE_PAT: ${{ secrets.VSCODE_PAT }}

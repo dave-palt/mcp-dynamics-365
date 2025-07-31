@@ -20,7 +20,7 @@
     "test": "node test-server.js",
     "prepublishOnly": "npm run clean && npm run build",
     "publish:npm": "npm publish",
-    "publish:vscode": "cd vscode-extension && npm install && npm run compile && npx vsce package && npx vsce publish"
+    "publish:vscode": "cd vscode-extension && npm install && npm run compile && npx @vscode/vsce package && npx @vscode/vsce publish"
   },
   "keywords": [
     "mcp",
@@ -48,7 +48,7 @@
     "package.json"
   ],
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=20.0.0"
   },
   "publishConfig": {
     "access": "public"

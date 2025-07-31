@@ -36,7 +36,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
           registry-url: 'https://registry.npmjs.org'
 
       - name: Setup pnpm
@@ -74,7 +74,7 @@ jobs:
       - name: Compile and publish VS Code extension
         if: ${{ github.event.inputs.publish_vscode == 'true' }}
         run: |
-          npm install -g vsce
+          npm install -g @vscode/vsce
           cd vscode-extension
           npm install
           npm run compile
