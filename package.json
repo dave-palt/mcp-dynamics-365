@@ -19,6 +19,7 @@
     "typecheck": "tsc --noEmit",
     "test": "node test-server.js",
     "test:read-tools": "npm run build && node test-read-tools.js",
+    "convert-icon": "npx sharp-cli -i vscode-extension/images/icon.svg -o vscode-extension/images/icon.png resize 128 128",
     "prepublishOnly": "npm run clean && npm run build",
     "publish:npm": "npm publish",
     "publish:vscode": "cd vscode-extension && npm install && npm run compile && npx @vscode/vsce package && npx @vscode/vsce publish",
