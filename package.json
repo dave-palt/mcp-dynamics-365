@@ -20,7 +20,8 @@
     "test": "node test-server.js",
     "prepublishOnly": "npm run clean && npm run build",
     "publish:npm": "npm publish",
-    "publish:vscode": "cd vscode-extension && npm install && npm run compile && npx @vscode/vsce package && npx @vscode/vsce publish"
+    "publish:vscode": "cd vscode-extension && npm install && npm run compile && npx @vscode/vsce package && npx @vscode/vsce publish",
+    "version:minor": "cd vscode-extension && pnpm version minor --no-git-tag-version && git add package.json && git commit -m 'chore: bump version minor' && cd .. && pnpm version minor && git push --follow-tags"
   },
   "keywords": [
     "mcp",

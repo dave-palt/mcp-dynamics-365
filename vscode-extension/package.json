@@ -2,7 +2,7 @@
   "name": "mcp-dynamics365-extension",
   "displayName": "MCP Dynamics 365 Server",
   "description": "VS Code extension for MCP Dynamics 365 server configuration (AI-generated side project)",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "publisher": "dav3",
   "engines": {
     "vscode": "^1.74.0"
