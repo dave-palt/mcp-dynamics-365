@@ -121,6 +121,19 @@ Ask: "What fields are available for contacts?"
 }
 ```
 
+#### `list_functions_and_metadata` - Discover functions and metadata
+
+Ask: "What functions and actions are available in Dynamics 365?"
+
+```json
+{
+  "tool": "list_functions_and_metadata",
+  "arguments": {
+    "includeDetails": false
+  }
+}
+```
+
 ### 2. Data Querying
 
 #### `query_entities` - Search and filter entities
@@ -224,6 +237,35 @@ Ask: "Show me all opportunities created this month with their values"
 #### `execute_function` - Call Dynamics 365 functions
 
 Ask: "Who am I in the system?"
+
+```json
+{
+  "tool": "execute_function",
+  "arguments": {
+    "functionName": "WhoAmI",
+    "method": "GET"
+  }
+}
+```
+
+### 4. Advanced Operations
+
+#### `execute_odata_query` - Custom OData queries
+
+Ask: "Execute a custom query to find active opportunities over $10,000"
+
+```json
+{
+  "tool": "execute_odata_query",
+  "arguments": {
+    "query": "opportunities?$filter=statecode eq 0 and estimatedvalue gt 10000&$select=name,estimatedvalue,createdon&$orderby=estimatedvalue desc"
+  }
+}
+```
+
+#### `execute_function` - Call Dynamics 365 functions
+
+Ask: "Who am I currently logged in as?"
 
 ```json
 {

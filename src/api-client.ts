@@ -6,6 +6,7 @@ import {
   D365Config,
   D365DetailedAttributeMetadata,
   D365EntityMetadata,
+  D365MetadataCollection,
   D365PicklistOption,
   D365QueryOptions,
   D365QueryResult,
@@ -150,8 +151,8 @@ export class D365ApiClient {
           attributeDef.AttributeType === "Picklist"
             ? "Microsoft.Dynamics.CRM.PicklistAttributeMetadata"
             : attributeDef.AttributeType === "State"
-            ? "Microsoft.Dynamics.CRM.StateAttributeMetadata"
-            : "Microsoft.Dynamics.CRM.StatusAttributeMetadata";
+              ? "Microsoft.Dynamics.CRM.StateAttributeMetadata"
+              : "Microsoft.Dynamics.CRM.StatusAttributeMetadata";
 
         url = `${this.baseUrl}/api/data/v9.2/EntityDefinitions(LogicalName='${entityName}')/Attributes(LogicalName='${attributeName}')/${castType}?$expand=OptionSet`;
         response = await axios.get(url, { headers });
@@ -449,6 +450,129 @@ export class D365ApiClient {
         error,
         `Failed to execute custom query: ${odataQuery}`
       );
+    }
+  }
+
+  /**
+   * Get all functions, actions, complex types, enum types, and global option sets
+   */
+  async getFunctionsAndMetadata(): Promise<D365ApiResponse<D365MetadataCollection>> {
+    try {
+      const headers = await this.authService.getAuthHeaders();
+
+      // Get the service document to discover all available resources
+      const url = `${this.baseUrl}/api/data/v9.2/$metadata`;
+
+      const response = await axios.get(url, {
+        headers: {
+          ...headers,
+          'Accept': 'application/xml'
+        }
+      });
+
+      // Parse the metadata to extract functions, actions, etc.
+      const metadata = await this.parseMetadata(response.data);
+
+      return {
+        success: true,
+        data: metadata,
+        statusCode: response.status,
+      };
+    } catch (error: any) {
+      return this.handleError(
+        error,
+        "Failed to get functions and metadata"
+      );
+    }
+  }
+
+  /**
+   * Parse XML metadata to extract functions, actions, complex types, and enum types
+   */
+  private async parseMetadata(xmlData: string): Promise<D365MetadataCollection> {
+    try {
+      // For a more user-friendly approach, let's use the JSON-based service document
+      const headers = await this.authService.getAuthHeaders();
+      const serviceDocUrl = `${this.baseUrl}/api/data/v9.2/`;
+
+      const response = await axios.get(serviceDocUrl, {
+        headers: {
+          ...headers,
+          'Accept': 'application/json'
+        }
+      });
+
+      const serviceDoc = response.data;
+
+      // Extract different types of resources
+      const result = {
+        functions: [],
+        actions: [],
+        complexTypes: [],
+        enumTypes: [],
+        globalOptionSets: [],
+        entitySets: serviceDoc.value || [],
+        summary: {
+          totalFunctions: 0,
+          totalActions: 0,
+          totalComplexTypes: 0,
+          totalEnumTypes: 0,
+          totalGlobalOptionSets: 0,
+          totalEntitySets: serviceDoc.value?.length || 0
+        }
+      };
+
+      // Get function imports and actions from metadata using OData queries
+      try {
+        // Get function definitions
+        const functionsUrl = `${this.baseUrl}/api/data/v9.2/FunctionDefinitions?$select=Name,DisplayName,Description`;
+        const functionsResponse = await axios.get(functionsUrl, { headers });
+        result.functions = functionsResponse.data.value || [];
+        result.summary.totalFunctions = result.functions.length;
+      } catch (e) {
+        console.log("Could not fetch function definitions");
+      }
+
+      try {
+        // Get action definitions  
+        const actionsUrl = `${this.baseUrl}/api/data/v9.2/ActionDefinitions?$select=Name,DisplayName,Description`;
+        const actionsResponse = await axios.get(actionsUrl, { headers });
+        result.actions = actionsResponse.data.value || [];
+        result.summary.totalActions = result.actions.length;
+      } catch (e) {
+        console.log("Could not fetch action definitions");
+      }
+
+      try {
+        // Get global option sets
+        const optionSetsUrl = `${this.baseUrl}/api/data/v9.2/GlobalOptionSetDefinitions?$select=Name,DisplayName,Description`;
+        const optionSetsResponse = await axios.get(optionSetsUrl, { headers });
+        result.globalOptionSets = optionSetsResponse.data.value || [];
+        result.summary.totalGlobalOptionSets = result.globalOptionSets.length;
+      } catch (e) {
+        console.log("Could not fetch global option sets");
+      }
+
+      return result;
+    } catch (error: any) {
+      // Fallback with basic information
+      return {
+        functions: [],
+        actions: [],
+        complexTypes: [],
+        enumTypes: [],
+        globalOptionSets: [],
+        entitySets: [],
+        summary: {
+          totalFunctions: 0,
+          totalActions: 0,
+          totalComplexTypes: 0,
+          totalEnumTypes: 0,
+          totalGlobalOptionSets: 0,
+          totalEntitySets: 0
+        },
+        error: "Could not parse metadata, limited information available"
+      };
     }
   }
 

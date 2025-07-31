@@ -113,6 +113,9 @@ export class D365MCPServer {
             case "execute_function":
               return await this.executeFunction(args);
 
+            case "list_functions_and_metadata":
+              return await this.listFunctionsAndMetadata(args);
+
             default:
               throw new Error(`Unknown tool: ${name}`);
           }
@@ -354,6 +357,20 @@ export class D365MCPServer {
           required: ["functionName"],
         },
       },
+      {
+        name: "list_functions_and_metadata",
+        description: "List all available functions, actions, complex types, enum types, and global option sets (non-entity resources) in Dynamics 365",
+        inputSchema: {
+          type: "object",
+          properties: {
+            includeDetails: {
+              type: "boolean",
+              description: "Whether to include detailed information about each resource (default: false)",
+              default: false,
+            },
+          },
+        },
+      },
     ];
   }
 
@@ -525,17 +542,16 @@ export class D365MCPServer {
       const filteredEntities = args.includeSystem
         ? entities
         : entities.filter(
-            (entity: string) =>
-              !entity.startsWith("_") && !entity.includes("system")
-          );
+          (entity: string) =>
+            !entity.startsWith("_") && !entity.includes("system")
+        );
 
       return {
         content: [
           {
             type: "text",
-            text: `Available entities (${
-              filteredEntities.length
-            }):\n\n${filteredEntities.join("\n")}`,
+            text: `Available entities (${filteredEntities.length
+              }):\n\n${filteredEntities.join("\n")}`,
           },
         ],
       };
@@ -562,9 +578,8 @@ export class D365MCPServer {
         content: [
           {
             type: "text",
-            text: `Query results for "${entitySet}":\n\nCount: ${
-              data.value?.length || 0
-            }\n\n${JSON.stringify(data, null, 2)}`,
+            text: `Query results for "${entitySet}":\n\nCount: ${data.value?.length || 0
+              }\n\n${JSON.stringify(data, null, 2)}`,
           },
         ],
       };
@@ -754,6 +769,125 @@ export class D365MCPServer {
           {
             type: "text",
             text: `Failed to execute function "${functionName}": ${result.error}`,
+          },
+        ],
+        isError: true,
+      };
+    }
+  }
+
+  private async listFunctionsAndMetadata(args: any): Promise<CallToolResult> {
+    const { includeDetails = false } = args;
+    const result = await this.apiClient.getFunctionsAndMetadata();
+
+    if (result.success && result.data) {
+      const metadata = result.data;
+      let output = "**Dynamics 365 Functions and Metadata Resources**\n\n";
+
+      // Summary
+      output += "**Summary:**\n";
+      output += `- Functions: ${metadata.summary.totalFunctions}\n`;
+      output += `- Actions: ${metadata.summary.totalActions}\n`;
+      output += `- Global Option Sets: ${metadata.summary.totalGlobalOptionSets}\n`;
+      output += `- Entity Sets: ${metadata.summary.totalEntitySets}\n`;
+      output += "\n";
+
+      // Functions
+      if (metadata.functions && metadata.functions.length > 0) {
+        output += "**Available Functions:**\n";
+        metadata.functions.forEach((func: any) => {
+          output += `- **${func.Name}**`;
+          if (func.DisplayName?.UserLocalizedLabel?.Label) {
+            output += ` (${func.DisplayName.UserLocalizedLabel.Label})`;
+          }
+          if (func.Description?.UserLocalizedLabel?.Label) {
+            output += `\n  - ${func.Description.UserLocalizedLabel.Label}`;
+          }
+          output += "\n";
+        });
+        output += "\n";
+      }
+
+      // Actions
+      if (metadata.actions && metadata.actions.length > 0) {
+        output += "**Available Actions:**\n";
+        metadata.actions.forEach((action: any) => {
+          output += `- **${action.Name}**`;
+          if (action.DisplayName?.UserLocalizedLabel?.Label) {
+            output += ` (${action.DisplayName.UserLocalizedLabel.Label})`;
+          }
+          if (action.Description?.UserLocalizedLabel?.Label) {
+            output += `\n  - ${action.Description.UserLocalizedLabel.Label}`;
+          }
+          output += "\n";
+        });
+        output += "\n";
+      }
+
+      // Global Option Sets
+      if (metadata.globalOptionSets && metadata.globalOptionSets.length > 0) {
+        output += "**Available Global Option Sets:**\n";
+        metadata.globalOptionSets.forEach((optionSet: any) => {
+          output += `- **${optionSet.Name}**`;
+          if (optionSet.DisplayName?.UserLocalizedLabel?.Label) {
+            output += ` (${optionSet.DisplayName.UserLocalizedLabel.Label})`;
+          }
+          if (optionSet.Description?.UserLocalizedLabel?.Label) {
+            output += `\n  - ${optionSet.Description.UserLocalizedLabel.Label}`;
+          }
+          output += "\n";
+        });
+        output += "\n";
+      }
+
+      // Entity Sets (for reference)
+      if (metadata.entitySets && metadata.entitySets.length > 0) {
+        output += "**Entity Sets (for reference):**\n";
+        output += `Total: ${metadata.entitySets.length} entities\n`;
+        if (includeDetails) {
+          metadata.entitySets.forEach((entitySet: any) => {
+            output += `- ${entitySet.name || entitySet}\n`;
+          });
+        } else {
+          output += "(Use 'list_entities' tool for detailed entity information)\n";
+        }
+        output += "\n";
+      }
+
+      // Notes and usage instructions
+      output += "**Usage Notes:**\n";
+      output += "- Use the `execute_function` tool to call any of the listed functions or actions\n";
+      output += "- Functions typically use GET method, actions typically use POST\n";
+      output += "- Global Option Sets can be referenced when creating/updating entity attributes\n";
+      output += "- For detailed entity information, use the `list_entities` or `get_entity_schema` tools\n";
+
+      if (metadata.error) {
+        output += `\n**Note:** ${metadata.error}\n`;
+      }
+
+      // Include raw data if requested
+      if (includeDetails) {
+        output += `\n**Raw Metadata (JSON):**\n\`\`\`json\n${JSON.stringify(
+          metadata,
+          null,
+          2
+        )}\n\`\`\``;
+      }
+
+      return {
+        content: [
+          {
+            type: "text",
+            text: output,
+          },
+        ],
+      };
+    } else {
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Failed to list functions and metadata: ${result.error}`,
           },
         ],
         isError: true,

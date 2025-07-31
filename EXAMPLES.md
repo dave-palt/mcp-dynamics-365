@@ -15,6 +15,17 @@ Here are some example interactions an AI agent could have with this MCP server:
 }
 ```
 
+### List functions, actions, and other metadata
+
+```json
+{
+  "tool": "list_functions_and_metadata",
+  "arguments": {
+    "includeDetails": false
+  }
+}
+```
+
 ### Get contact schema
 
 ```json
@@ -93,6 +104,18 @@ Here are some example interactions an AI agent could have with this MCP server:
   "tool": "execute_odata_query",
   "arguments": {
     "query": "contacts?$select=firstname,lastname,emailaddress1&$expand=parentcustomerid($select=name)&$filter=statecode eq 0&$orderby=createdon desc&$top=20"
+  }
+}
+```
+
+### Execute a Dynamics 365 function
+
+```json
+{
+  "tool": "execute_function",
+  "arguments": {
+    "functionName": "WhoAmI",
+    "method": "GET"
   }
 }
 ```

@@ -112,3 +112,63 @@ export interface D365ApiResponse<T = any> {
   error?: string;
   statusCode?: number;
 }
+
+export interface D365FunctionMetadata {
+  Name: string;
+  DisplayName?: {
+    UserLocalizedLabel?: {
+      Label: string;
+    };
+  };
+  Description?: {
+    UserLocalizedLabel?: {
+      Label: string;
+    };
+  };
+}
+
+export interface D365ActionMetadata {
+  Name: string;
+  DisplayName?: {
+    UserLocalizedLabel?: {
+      Label: string;
+    };
+  };
+  Description?: {
+    UserLocalizedLabel?: {
+      Label: string;
+    };
+  };
+}
+
+export interface D365GlobalOptionSetMetadata {
+  Name: string;
+  DisplayName?: {
+    UserLocalizedLabel?: {
+      Label: string;
+    };
+  };
+  Description?: {
+    UserLocalizedLabel?: {
+      Label: string;
+    };
+  };
+}
+
+export interface D365MetadataCollection {
+  functions: D365FunctionMetadata[];
+  actions: D365ActionMetadata[];
+  complexTypes: any[];
+  enumTypes: any[];
+  globalOptionSets: D365GlobalOptionSetMetadata[];
+  entitySets: any[];
+  summary: {
+    totalFunctions: number;
+    totalActions: number;
+    totalComplexTypes: number;
+    totalEnumTypes: number;
+    totalGlobalOptionSets: number;
+    totalEntitySets: number;
+  };
+  error?: string;
+}
