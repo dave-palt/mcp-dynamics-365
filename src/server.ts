@@ -8,11 +8,20 @@ import {
   Tool,
 } from "@modelcontextprotocol/sdk/types.js";
 import dotenv from "dotenv";
+import { readFileSync } from "fs";
+import { dirname, join } from "path";
+import { fileURLToPath } from "url";
 import { D365ApiClient } from "./api-client.js";
 import { D365Config } from "./types.js";
 
 // Load environment variables
 dotenv.config();
+
+// Get package version
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const packageJson = JSON.parse(readFileSync(join(__dirname, "../package.json"), "utf8"));
+const packageVersion = packageJson.version;
 
 export class D365MCPServer {
   private server: Server;
@@ -35,7 +44,7 @@ export class D365MCPServer {
     this.server = new Server(
       {
         name: "dynamics365-crm-server",
-        version: "1.0.0",
+        version: packageVersion,
       },
       {
         capabilities: {
@@ -767,6 +776,7 @@ export class D365MCPServer {
   }
 
   async run(): Promise<void> {
+    console.error(`Starting Dynamics 365 MCP Server v${packageVersion}`);
     const transport = new StdioServerTransport();
     await this.server.connect(transport);
   }
