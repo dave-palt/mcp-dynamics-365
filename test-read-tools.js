@@ -167,27 +167,6 @@ class ReadToolsTester {
     };
   }
 
-  async testGetFunctionsAndMetadata() {
-    const result = await this.apiClient.getFunctionsAndMetadata();
-
-    if (!result.success) {
-      throw new Error(result.error || "Failed to get functions and metadata");
-    }
-
-    const metadata = result.data;
-    if (!metadata || !metadata.summary) {
-      throw new Error("Invalid metadata structure returned");
-    }
-
-    return {
-      success: true,
-      totalFunctions: metadata.summary.totalFunctions,
-      totalActions: metadata.summary.totalActions,
-      totalGlobalOptionSets: metadata.summary.totalGlobalOptionSets,
-      totalEntitySets: metadata.summary.totalEntitySets,
-    };
-  }
-
   async testQueryEntities() {
     // Use plural entity set name for data operations
     const result = await this.apiClient.queryEntities("contacts", {
@@ -275,9 +254,6 @@ class ReadToolsTester {
       );
       await this.runTest("Get Attribute Metadata", () =>
         this.testGetAttributeMetadata()
-      );
-      await this.runTest("Get Functions and Metadata", () =>
-        this.testGetFunctionsAndMetadata()
       );
       await this.runTest("Query Entities (basic)", () =>
         this.testQueryEntities()

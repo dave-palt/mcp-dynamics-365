@@ -15,17 +15,6 @@ Here are some example interactions an AI agent could have with this MCP server:
 }
 ```
 
-### List functions, actions, and other metadata
-
-```json
-{
-  "tool": "list_functions_and_metadata",
-  "arguments": {
-    "includeDetails": false
-  }
-}
-```
-
 ### Get contact schema
 
 ```json

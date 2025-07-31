@@ -8,7 +8,6 @@ A comprehensive Model Context Protocol (MCP) server for interacting with Microso
 
 - **Generic Entity Operations**: Query, create, update, and delete any Dynamics 365 entity
 - **Schema Discovery**: Fetch entity metadata and available entity sets
-- **Functions & Metadata Discovery**: List all available functions, actions, global option sets, and other non-entity resources
 - **Flexible Querying**: Support for OData query parameters (select, filter, orderby, top, skip, expand)
 - **Custom OData Queries**: Execute direct OData queries for complex scenarios
 - **Function Execution**: Call Dynamics 365 functions and actions
@@ -342,22 +341,6 @@ Execute a Dynamics 365 function or action.
 {
   "functionName": "WhoAmI",
   "method": "GET"
-}
-```
-
-### 10. `list_functions_and_metadata`
-
-List all available functions, actions, complex types, enum types, and global option sets (non-entity resources) in Dynamics 365.
-
-**Parameters:**
-
-- `includeDetails` (boolean, optional): Whether to include detailed information about each resource
-
-**Example:**
-
-```json
-{
-  "includeDetails": false
 }
 ```
 

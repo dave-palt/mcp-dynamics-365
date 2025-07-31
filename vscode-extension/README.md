@@ -121,19 +121,6 @@ Ask: "What fields are available for contacts?"
 }
 ```
 
-#### `list_functions_and_metadata` - Discover functions and metadata
-
-Ask: "What functions and actions are available in Dynamics 365?"
-
-```json
-{
-  "tool": "list_functions_and_metadata",
-  "arguments": {
-    "includeDetails": false
-  }
-}
-```
-
 ### 2. Data Querying
 
 #### `query_entities` - Search and filter entities
