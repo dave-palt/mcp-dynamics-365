@@ -430,11 +430,29 @@ The server provides comprehensive error handling:
 
 ## Contributing
 
+For detailed development guidelines and conventions, see [`copilot-instructions.md`](.github/copilot-instructions.md).
+
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
 4. Add tests if applicable
 5. Submit a pull request
+
+### Development Setup
+
+```bash
+# Install dependencies
+pnpm install
+
+# Build the project
+pnpm run build
+
+# Run tests
+pnpm run test:read-tools
+
+# Type checking
+pnpm run typecheck
+```
 
 ## License
 
