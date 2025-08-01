@@ -6,6 +6,47 @@ This file contains specific instructions for AI assistants working on this codeb
 
 This is a Model Context Protocol (MCP) server for Microsoft Dynamics 365 CRM. It provides AI agents with tools to perform CRUD operations, query data, fetch schemas, and execute custom operations on Dynamics 365 entities.
 
+## 🚨 Critical: Stay Current with MCP Technology
+
+**The Model Context Protocol ecosystem is rapidly evolving** - changes occur weekly or even daily. Before working on any MCP-related features:
+
+### 📚 **ALWAYS Check Latest Documentation First**
+
+1. **Read the official MCP SDK documentation**: Use the `fetch_webpage` tool to check the latest changes at:
+
+   - Main documentation: https://modelcontextprotocol.io/
+   - SDK GitHub: https://github.com/modelcontextprotocol/typescript-sdk
+   - Release notes and changelog for breaking changes
+   - API documentation for current interfaces and patterns
+
+2. **Check for deprecations and new features**:
+
+   - Transport implementations (HTTP, stdio, SSE)
+   - Client/server interfaces and lifecycle methods
+   - Tool definition schemas and parameter handling
+   - Authentication and security patterns
+
+3. **Verify current best practices**:
+   - Package imports and module structure
+   - Error handling patterns
+   - Type definitions and interfaces
+   - Transport configuration and setup
+
+### ⚠️ **Common Pitfalls to Avoid**
+
+- **Don't assume existing patterns are current** - always verify against latest docs
+- **Don't use deprecated transport methods** - HTTP/SSE implementations change frequently
+- **Don't skip version checking** - MCP SDK updates often include breaking changes
+- **Don't implement without research** - newer, simpler approaches may be available
+
+### 🔄 **When to Re-check Documentation**
+
+- Before implementing any new MCP features
+- When encountering transport or connection issues
+- When SDK version updates are available
+- When error patterns don't match current documentation
+- Before troubleshooting connectivity or protocol issues
+
 ## Package Manager
 
 **Always use `pnpm`** for this project:
@@ -135,8 +176,9 @@ Use these standard entities in examples and tests:
 ## MCP Integration
 
 - Server implements MCP protocol via `@modelcontextprotocol/sdk`
-- Uses stdio transport for communication
+- Supports both stdio and HTTP transports (StreamableHTTPServerTransport)
 - Tools are exposed via `ListToolsRequestSchema` and `CallToolRequestSchema`
+- **Always verify transport implementations against latest SDK docs** - transport APIs change frequently
 
 ## Security Notes
 
@@ -151,6 +193,7 @@ Use these standard entities in examples and tests:
 - Maintain clear parameter descriptions
 - Update VS Code extension README when relevant
 - **Maintain CHANGELOG.md**: Update changelog for every feature addition, bug fix, or breaking change
+- **Update copilot instructions**: Keep `.github/copilot-instructions.md` in sync with project changes
 
 ## Changelog Management
 
@@ -172,6 +215,7 @@ Use these standard entities in examples and tests:
 7. Follow naming conventions consistently
 8. **Update CHANGELOG.md** with the new feature
 9. **Update .gitignore** if new files or patterns need to be excluded
+10. **Update copilot instructions** if new patterns, conventions, or workflows are introduced
 
 ## Security and Git Management
 
@@ -209,9 +253,16 @@ Use these standard entities in examples and tests:
 - Always review .gitignore when adding new files or patterns
 - Ensure sensitive data patterns are properly excluded
 
+❌ **Don't use outdated MCP patterns**
+
+- Always check latest MCP SDK documentation before implementing features
+- Verify transport implementations and API interfaces are current
+- Don't rely on cached knowledge - the ecosystem changes rapidly
+
 ✅ **Do follow established patterns**
 
 - Use consistent error handling
 - Include proper TypeScript types
 - Add descriptive tool descriptions
 - Test with standard entities only
+- **Always verify MCP SDK patterns against latest documentation**
