@@ -16,6 +16,12 @@ This is a Model Context Protocol (MCP) server for Microsoft Dynamics 365 CRM. It
 - Testing: `pnpm run test` or `pnpm run test:read-tools`
 - Type checking: `pnpm run typecheck`
 
+### Package Management Guidelines
+
+- **Use the most recent compatible versions** when adding new packages
+- Check for latest stable versions before installing dependencies
+- Update package versions regularly to maintain security and compatibility
+
 ## Critical Naming Conventions
 
 The project has **two different naming patterns** that must be used correctly:
@@ -84,6 +90,11 @@ D365_TENANT_ID=your-tenant-id
 D365_RESOURCE=https://your-org.crm.dynamics.com
 ```
 
+### Default Configuration
+
+- **Default HTTP port**: 3300
+- Use this port for local development and testing unless specifically configured otherwise
+
 ### Testing
 
 - `test-read-tools.js` tests all read-only operations
@@ -139,6 +150,15 @@ Use these standard entities in examples and tests:
 - Include practical examples for each tool
 - Maintain clear parameter descriptions
 - Update VS Code extension README when relevant
+- **Maintain CHANGELOG.md**: Update changelog for every feature addition, bug fix, or breaking change
+
+## Changelog Management
+
+- **Always update CHANGELOG.md** when adding features, fixing bugs, or making breaking changes
+- Follow semantic versioning principles
+- Include clear descriptions of changes with context
+- Group changes by type: Added, Changed, Deprecated, Removed, Fixed, Security
+- Date each release and include version numbers
 
 ## When Adding New Tools
 
@@ -149,6 +169,18 @@ Use these standard entities in examples and tests:
 5. Update documentation
 6. Add test coverage in `test-read-tools.js`
 7. Follow naming conventions consistently
+8. **Update CHANGELOG.md** with the new feature
+9. **Update .gitignore** if new files or patterns need to be excluded
+
+## Security and Git Management
+
+### .gitignore Maintenance
+
+- **Always update .gitignore** when making changes that could introduce sensitive data
+- Review and update exclusion patterns for new file types
+- Ensure test files with credentials are properly excluded
+- Add patterns for new development tools or build artifacts
+- Double-check before committing to avoid exposing sensitive information
 
 ## Common Pitfalls to Avoid
 
@@ -164,12 +196,17 @@ Use these standard entities in examples and tests:
 ❌ **Don't commit sensitive files**
 
 - `.env` files
-- `test-read-tools.js`
 - Any files with credentials
+- Configuration files with API keys or secrets
 
 ❌ **Don't forget to build before testing**
 
 - Run `pnpm run build` before `pnpm run test:read-tools`
+
+❌ **Don't skip .gitignore updates**
+
+- Always review .gitignore when adding new files or patterns
+- Ensure sensitive data patterns are properly excluded
 
 ✅ **Do follow established patterns**
 
