@@ -72,6 +72,66 @@ pnpm build
 pnpm start
 ```
 
+### Transport Options
+
+The server supports two transport methods:
+
+#### 1. Stdio Transport (Default)
+
+For direct integration with MCP clients:
+
+```bash
+# Default transport
+node dist/index.js
+
+# Explicitly specify stdio
+node dist/index.js --transport=stdio
+```
+
+#### 2. HTTP Transport
+
+For remote access and web-based integrations:
+
+```bash
+# Default HTTP port (3300)
+node dist/index.js --transport=http
+
+# Custom port
+node dist/index.js --transport=http --port=8080
+```
+
+HTTP transport features:
+
+- **Streamable HTTP** protocol compatible with MCP SDK
+- **CORS support** for browser-based clients
+- **Session management** with UUID-based session IDs
+- **Default port**: 3300
+- **Endpoint**: `/mcp`
+
+#### Command Line Options
+
+```bash
+# Show help
+node dist/index.js --help
+
+# Available options:
+--transport=<stdio|http>  Transport type (default: stdio)
+--port=<number>          Port for HTTP transport (default: 3300)
+--help, -h               Show help message
+```
+
+### Testing HTTP Transport
+
+Test the HTTP transport using the included test script:
+
+```bash
+# Start server with HTTP transport
+node dist/index.js --transport=http
+
+# In another terminal, run the test
+node test-streamable-http.js
+```
+
 ## MCP Integration
 
 ### Prerequisites

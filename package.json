@@ -11,7 +11,11 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsx src/index.ts",
+    "dev:http": "tsx src/index.ts --transport=http",
+    "dev:http-remote": "tsx src/index.ts --transport=http --host=0.0.0.0",
     "start": "node dist/index.js",
+    "start:http": "node dist/index.js --transport=http",
+    "start:http-remote": "node dist/index.js --transport=http --host=0.0.0.0",
     "watch": "tsc --watch",
     "watch:dev": "tsx watch src/index.ts",
     "clean": "rm -rf dist",
@@ -19,6 +23,7 @@
     "typecheck": "tsc --noEmit",
     "test": "node test-server.js",
     "test:read-tools": "npm run build && node test-read-tools.js",
+    "test:http": "npm run build && node test-streamable-http.js",
     "convert-icon": "npx sharp-cli -i vscode-extension/images/icon.svg -o vscode-extension/images/icon.png resize 128 128",
     "prepublishOnly": "npm run clean && npm run build",
     "publish:npm": "npm publish",
@@ -60,9 +65,13 @@
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.17.1",
     "axios": "^1.6.0",
-    "dotenv": "^16.3.0"
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.0",
+    "express": "^5.1.0"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
     "@types/node": "^20.0.0",
     "tsx": "^4.0.0",
     "typescript": "^5.0.0"

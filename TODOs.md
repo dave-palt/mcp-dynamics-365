@@ -2,7 +2,6 @@
 
 ## 🔴 High
 
-- [ ] **HTTP Transport** - Add Streamable HTTP alongside stdio (port 3300)
 - [ ] **Authentication** - Define and implement auth strategy for HTTP mode
 
 ## 🟡 Medium
@@ -27,3 +26,4 @@
 - VS Code extension
 - 8 MCP tools for D365 operations
 - Test suite for read operations
+- **HTTP Transport** - Streamable HTTP alongside stdio (port 3300)
