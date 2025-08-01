@@ -159,6 +159,7 @@ Use these standard entities in examples and tests:
 - Include clear descriptions of changes with context
 - Group changes by type: Added, Changed, Deprecated, Removed, Fixed, Security
 - Date each release and include version numbers
+- **Keep entries short and concise** - focus on user-visible changes, not implementation details
 
 ## When Adding New Tools
 
