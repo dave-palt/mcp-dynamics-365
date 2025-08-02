@@ -8,34 +8,29 @@
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
 import { spawn } from "child_process";
-import dotenv from "dotenv";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
-
-// Load environment variables
-dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 async function testStreamableHttpTransport() {
-  // Use environment variable or fallback to default port
-  const port = process.env.MCP_HTTP_PORT
-    ? parseInt(process.env.MCP_HTTP_PORT)
-    : 3300;
-  const host = process.env.MCP_HTTP_HOST || "localhost";
-  const baseUrl = `http://${host}:${port}/mcp`;
+  // Get port from environment variable or default to 3300, then use 3302 for test to avoid conflicts
+  const defaultPort = parseInt(process.env.MCP_HTTP_PORT) || 3300;
+  const port = defaultPort + 2; // Use port offset to avoid conflicts with default
+  const baseUrl = `http://localhost:${port}/mcp`;
   let serverProcess = null;
 
   console.log("🚀 Starting self-contained MCP HTTP Transport test...");
+  console.log(`📡 Using test port ${port} (default port: ${defaultPort})`);
 
   try {
     // Start the server process
-    console.log(`🔧 Starting server on ${host}:${port}...`);
-    const serverScript = join(__dirname, "..", "..", "dist", "index.js");
+    console.log(`🔧 Starting server on port ${port}...`);
+    const serverScript = join(__dirname, "dist", "index.js");
     serverProcess = spawn(
       "node",
-      [serverScript, "--transport=http", `--host=${host}`, `--port=${port}`],
+      [serverScript, "--transport=http", "--host=localhost", `--port=${port}`],
       {
         stdio: ["ignore", "pipe", "pipe"],
       }

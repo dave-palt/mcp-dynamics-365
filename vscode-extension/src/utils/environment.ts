@@ -85,10 +85,9 @@ export class EnvironmentDetector {
             }
         }
 
-        // Use different default ports for local vs production
+        // Use default port 3300
         return 3300;
-    }
-    static getServerDisplayName(env: EnvironmentInfo): string {
+    } static getServerDisplayName(env: EnvironmentInfo): string {
         return env.isLocal ? 'Local Development Server' : 'MCP Dynamics 365 Server';
     }
 

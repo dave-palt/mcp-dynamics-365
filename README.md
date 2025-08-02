@@ -122,11 +122,16 @@ cp .env.example .env
 3. Configure your environment variables in `.env`:
 
 ```env
+# Dynamics 365 Connection
 D365_BASE_URL=https://your-org.crm.dynamics.com
 D365_CLIENT_ID=your-client-id
 D365_CLIENT_SECRET=your-client-secret
 D365_TENANT_ID=your-tenant-id
 D365_RESOURCE=https://your-org.crm.dynamics.com
+
+# HTTP Transport Configuration (Optional)
+MCP_HTTP_PORT=3300        # Default port for HTTP transport
+MCP_HTTP_HOST=localhost   # Default host for HTTP transport
 ```
 
 ## Usage
@@ -188,9 +193,12 @@ node dist/index.js --help
 
 # Available options:
 --transport=<stdio|http>  Transport type (default: stdio)
---port=<number>          Port for HTTP transport (default: 3300)
+--port=<number>          Port for HTTP transport (default: 3300, or MCP_HTTP_PORT env var)
+--host=<ip-address>      Host for HTTP transport (default: localhost, or MCP_HTTP_HOST env var)
 --help, -h               Show help message
 ```
+
+**Environment Variables**: Default values for `--port` and `--host` can be configured using `MCP_HTTP_PORT` and `MCP_HTTP_HOST` environment variables in your `.env` file.
 
 ### Testing HTTP Transport
 

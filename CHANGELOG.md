@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **HTTP Transport Support** - Added Streamable HTTP transport alongside stdio
   - Command line arguments: `--transport=http`, `--port=<number>`, and `--host=<ip-address>`
   - Default HTTP port: 3300, default host: localhost
+  - Environment variable configuration: `MCP_HTTP_PORT` and `MCP_HTTP_HOST` for default values
   - CORS support for browser compatibility
   - Session management with UUID-based session IDs
   - Compatible with MCP SDK StreamableHTTPClientTransport

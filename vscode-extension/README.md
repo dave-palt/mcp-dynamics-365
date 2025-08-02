@@ -150,11 +150,16 @@ The extension automatically registers the HTTP server with VS Code's MCP system.
 Create a `.env` file in your workspace root:
 
 ```env
+# Dynamics 365 Connection
 D365_CLIENT_ID=your-client-id
 D365_CLIENT_SECRET=your-client-secret
 D365_TENANT_ID=your-tenant-id
 D365_BASE_URL=https://your-org.crm.dynamics.com
 D365_RESOURCE=https://your-org.crm.dynamics.com
+
+# HTTP Transport Configuration (Optional)
+MCP_HTTP_PORT=3300        # Default port for HTTP transport
+MCP_HTTP_HOST=localhost   # Default host for HTTP transport
 ```
 
 **Step 2: Server Registration (Automatic + Fallback)**
