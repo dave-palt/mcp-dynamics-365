@@ -56,7 +56,7 @@ jobs:
         run: |
           pnpm version ${{ github.event.inputs.version_type }}
           cd vscode-extension
-          npm version ${{ github.event.inputs.version_type }}
+          pnpm version ${{ github.event.inputs.version_type }}
           cd ..
 
       - name: Build project
@@ -67,7 +67,7 @@ jobs:
 
       - name: Publish to NPM
         if: ${{ github.event.inputs.publish_npm == 'true' }}
-        run: pnpm publish --no-git-checks
+        run: npm publish --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
@@ -76,8 +76,8 @@ jobs:
         run: |
           npm install -g @vscode/vsce
           cd vscode-extension
-          npm install
-          npm run compile
+          pnpm install
+          pnpm run compile
           vsce publish -p ${{ secrets.VSCODE_PAT }}
 
       - name: Push version changes

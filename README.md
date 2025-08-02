@@ -91,6 +91,13 @@ For remote servers:
 - Dynamics 365 CRM instance
 - Azure AD app registration with appropriate permissions
 
+### Package Manager Usage
+
+This project uses **pnpm** for local development and **npm** for registry operations:
+
+- **Use pnpm**: `pnpm install`, `pnpm run build`, `pnpm run dev`, `pnpm run test`
+- **Use npm**: `npm publish`, `npm install -g @dav3/mcp-dynamics365-server`
+
 ## Azure AD App Registration
 
 1. Go to Azure Portal > Azure Active Directory > App registrations

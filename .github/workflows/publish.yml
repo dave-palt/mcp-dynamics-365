@@ -34,7 +34,7 @@ jobs:
         run: pnpm run test
 
       - name: Publish to NPM
-        run: pnpm publish --no-git-checks
+        run: npm publish --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
@@ -51,18 +51,23 @@ jobs:
         with:
           node-version: '20'
 
+      - name: Setup pnpm for extension
+        uses: pnpm/action-setup@v2
+        with:
+          version: '9.15.9'
+
       - name: Install vsce
         run: npm install -g @vscode/vsce
 
       - name: Install extension dependencies
         run: |
           cd vscode-extension
-          npm install
+          pnpm install
 
       - name: Compile extension
         run: |
           cd vscode-extension
-          npm run compile
+          pnpm run compile
 
       - name: Publish to VS Code Marketplace
         run: |

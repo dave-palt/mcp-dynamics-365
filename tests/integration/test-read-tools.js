@@ -12,7 +12,7 @@
  * 📊 Data operations: Use PLURAL entity set names (e.g., "contacts", "accounts")
  * 🔍 OData queries: Use PLURAL entity set names in URL paths
  *
- * To run: npm run test:read-tools
+ * To run: pnpm run test:read-tools
  */
 
 import dotenv from "dotenv";

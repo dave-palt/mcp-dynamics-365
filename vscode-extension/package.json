@@ -2,7 +2,7 @@
   "name": "mcp-dynamics365-extension",
   "displayName": "MCP Dynamics 365 Server",
   "description": "VS Code extension for MCP Dynamics 365 server configuration (AI-generated side project)",
-  "version": "2.0.2",
+  "version": "2.0.0",
   "publisher": "dav3",
   "icon": "images/icon.png",
   "engines": {
@@ -43,11 +43,6 @@
           "type": "number",
           "default": 3300,
           "description": "Port for the HTTP server (default: 3300)"
-        },
-        "mcpDynamics365.httpHost": {
-          "type": "string",
-          "default": "localhost",
-          "description": "Host for the HTTP server (default: localhost)"
         },
         "mcpDynamics365.useHttpTransport": {
           "type": "boolean",
@@ -196,13 +191,13 @@
     }
   },
   "scripts": {
-    "vscode:prepublish": "npm run compile",
+    "vscode:prepublish": "pnpm run compile",
     "compile": "tsc -p ./",
     "compile:dev": "tsc -p ./ && node -e \"console.log('Development build completed')\"",
     "watch": "tsc -watch -p ./",
-    "package": "npm run compile && npx @vscode/vsce package",
-    "package:dev": "npm run compile:dev && npx @vscode/vsce package --pre-release",
-    "publish": "npm run compile && npx @vscode/vsce publish"
+    "package": "pnpm run compile && npx @vscode/vsce package",
+    "package:dev": "pnpm run compile:dev && npx @vscode/vsce package --pre-release",
+    "publish": "pnpm run compile && npx @vscode/vsce publish"
   },
   "devDependencies": {
     "@types/vscode": "^1.85.0",

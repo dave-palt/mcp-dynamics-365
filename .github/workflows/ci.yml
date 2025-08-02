@@ -52,15 +52,20 @@ jobs:
         with:
           node-version: '20'
 
+      - name: Setup pnpm for extension
+        uses: pnpm/action-setup@v2
+        with:
+          version: '9.15.9'
+
       - name: Install extension dependencies
         run: |
           cd vscode-extension
-          npm install
+          pnpm install
 
       - name: Compile extension
         run: |
           cd vscode-extension
-          npm run compile
+          pnpm run compile
 
       - name: Package extension (test)
         run: |

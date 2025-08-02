@@ -49,19 +49,28 @@ This is a Model Context Protocol (MCP) server for Microsoft Dynamics 365 CRM. It
 
 ## Package Manager
 
-**Always use `pnpm`** for this project:
+**Use `pnpm` for local development and project scripts:**
 
 - Install dependencies: `pnpm install`
 - Build: `pnpm run build`
 - Development: `pnpm run dev`
 - Testing: `pnpm run test` or `pnpm run test:read-tools`
 - Type checking: `pnpm run typecheck`
+- Version management: `pnpm version patch/minor/major`
+
+**Use `npm` for registry operations and global installations:**
+
+- Publishing: `npm publish`
+- Registry authentication: `npm login`, `npm whoami`
+- Global package installation: `npm install -g @dav3/mcp-dynamics365-server`
+- Global tools: `npm install -g @vscode/vsce`
 
 ### Package Management Guidelines
 
 - **Use the most recent compatible versions** when adding new packages
 - Check for latest stable versions before installing dependencies
 - Update package versions regularly to maintain security and compatibility
+- **Follow the npm/pnpm separation** - use pnpm for development, npm for registry operations
 
 ## Critical Naming Conventions
 
