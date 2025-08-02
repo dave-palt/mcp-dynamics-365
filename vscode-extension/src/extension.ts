@@ -157,29 +157,60 @@ export function activate(context: vscode.ExtensionContext) {
     const restartCommand = vscode.commands.registerCommand('mcpDynamics365.restart', restartMCPServer);
     const configureCommand = vscode.commands.registerCommand('mcpDynamics365.configure', configureMCPServer);
 
-    // HTTP Server commands (matching package.json command IDs)
-    const startHttpLocalCommand = vscode.commands.registerCommand('mcpDynamics365.startHttpServerLocal', startHttpServerLocal);
-    const startHttpProductionCommand = vscode.commands.registerCommand('mcpDynamics365.startHttpServerProduction', startHttpServerProduction);
+    // HTTP Server commands (with conditional dev commands)
+    const startHttpCommand = vscode.commands.registerCommand('mcpDynamics365.startHttpServer', startHttpServerProduction);
     const stopHttpCommand = vscode.commands.registerCommand('mcpDynamics365.stopHttpServer', stopHttpServer);
+
+    // Auto-detect development environment and conditionally register local dev command
+    const extensionConfig = vscode.workspace.getConfiguration('mcpDynamics365');
+    const userEnabledDev = extensionConfig.get<boolean>('enableDevelopmentCommands', false);
+
+    // Auto-detect development environment based on:
+    // 1. User explicitly enabled it via settings
+    // 2. Running from source (development) vs installed extension
+    // 3. Workspace contains the MCP server source code
+    const workspaceFolder = vscode.workspace.workspaceFolders?.[0];
+    const isDevWorkspace = workspaceFolder &&
+        (fs.existsSync(path.join(workspaceFolder.uri.fsPath, 'src', 'server.ts')) ||
+            fs.existsSync(path.join(workspaceFolder.uri.fsPath, 'dist', 'index.js')));
+
+    const enableDevCommands = userEnabledDev || !!isDevWorkspace;
+
+    let startHttpLocalCommand: vscode.Disposable | undefined;
+    if (enableDevCommands) {
+        startHttpLocalCommand = vscode.commands.registerCommand('mcpDynamics365.startHttpServerLocal', startHttpServerLocal);
+        if (userEnabledDev) {
+            outputChannel.appendLine('🔧 Development commands enabled (user setting)');
+        } else {
+            outputChannel.appendLine('🔧 Development commands auto-enabled (detected MCP server workspace)');
+        }
+    } else {
+        outputChannel.appendLine('🚀 Production mode - development commands hidden');
+    }
     const showOutputCommand = vscode.commands.registerCommand('mcpDynamics365.showOutput', () => {
         outputChannel.show();
     });
 
-    context.subscriptions.push(
+    const subscriptions = [
         startCommand,
         stopCommand,
         restartCommand,
         configureCommand,
-        startHttpLocalCommand,
-        startHttpProductionCommand,
+        startHttpCommand,
         stopHttpCommand,
         showOutputCommand,
         outputChannel
-    );
+    ];
+
+    // Add local dev command if enabled
+    if (startHttpLocalCommand) {
+        subscriptions.push(startHttpLocalCommand);
+    }
+
+    context.subscriptions.push(...subscriptions);
 
     // Auto-start if configured
-    const config = vscode.workspace.getConfiguration('mcpDynamics365');
-    if (config.get('autoStart')) {
+    if (extensionConfig.get('autoStart')) {
         outputChannel.appendLine('Auto-start enabled, starting MCP server...');
         startMCPServer();
     }
@@ -187,10 +218,14 @@ export function activate(context: vscode.ExtensionContext) {
     // Show welcome message
     outputChannel.appendLine('=== MCP Dynamics 365 Extension Activation Complete ===');
     outputChannel.appendLine('Available commands:');
-    outputChannel.appendLine('  - MCP: Start MCP Dynamics 365 Server');
-    outputChannel.appendLine('  - MCP: Stop MCP Dynamics 365 Server');
-    outputChannel.appendLine('  - MCP: Restart MCP Dynamics 365 Server');
+    outputChannel.appendLine('  - MCP: Start HTTP Server (Production)');
+    outputChannel.appendLine('  - MCP: Stop HTTP Server');
+    if (enableDevCommands) {
+        outputChannel.appendLine('  - MCP: Start HTTP Server (Local Dev) [Development Mode]');
+    }
     outputChannel.appendLine('  - MCP: Configure MCP Dynamics 365 Server');
+    outputChannel.appendLine('  - Legacy: Start/Stop/Restart MCP Dynamics 365 Server (Stdio)');
+    outputChannel.appendLine('  - MCP: Show Output');
 }
 
 export function deactivate() {

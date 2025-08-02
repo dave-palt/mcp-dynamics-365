@@ -78,6 +78,11 @@
         "mcpDynamics365.resource": {
           "type": "string",
           "description": "Dynamics 365 Resource URL (usually same as Base URL)"
+        },
+        "mcpDynamics365.enableDevelopmentCommands": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable development commands (Local Dev server). Set to true for development builds."
         }
       }
     },
@@ -88,8 +93,8 @@
         "category": "MCP Dynamics 365"
       },
       {
-        "command": "mcpDynamics365.startHttpServerProduction",
-        "title": "Start HTTP Server (Production)",
+        "command": "mcpDynamics365.startHttpServer",
+        "title": "Start HTTP Server",
         "category": "MCP Dynamics 365"
       },
       {
@@ -126,10 +131,11 @@
     "menus": {
       "commandPalette": [
         {
-          "command": "mcpDynamics365.startHttpServerLocal"
+          "command": "mcpDynamics365.startHttpServerLocal",
+          "when": "config.mcpDynamics365.enableDevelopmentCommands"
         },
         {
-          "command": "mcpDynamics365.startHttpServerProduction"
+          "command": "mcpDynamics365.startHttpServer"
         },
         {
           "command": "mcpDynamics365.stopHttpServer"
@@ -155,8 +161,10 @@
   "scripts": {
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
+    "compile:dev": "tsc -p ./ && node -e \"console.log('Development build completed')\"",
     "watch": "tsc -watch -p ./",
     "package": "npm run compile && npx @vscode/vsce package",
+    "package:dev": "npm run compile:dev && npx @vscode/vsce package --pre-release",
     "publish": "npm run compile && npx @vscode/vsce publish"
   },
   "devDependencies": {
