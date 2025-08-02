@@ -17,9 +17,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Compatible with MCP SDK StreamableHTTPClientTransport
   - DNS rebinding protection for remote deployments
   - Support for binding to any IP address (e.g., 0.0.0.0 for remote access)
+- **VS Code Extension Enhancements**
+  - Intelligent development vs production command visibility
+  - Auto-detection of development environments (workspace contains MCP server source)
+  - Clean production command names ("Start HTTP Server" instead of "Start HTTP Server (Production)")
+  - Conditional local development commands ("Start HTTP Server (Local Dev)")
+  - Enhanced emoji-rich logging for better debugging experience
+  - Smart environment detection with manual override via `enableDevelopmentCommands` setting
 - Test suite for HTTP transport using MCP SDK client
 - Enhanced command line interface with help documentation
 - New npm scripts for HTTP development and testing
+- Cross-referenced documentation between main project and VS Code extension
 
 ### Changed
 
@@ -27,6 +35,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added express and cors dependencies for HTTP transport
 - Enhanced index.js with command line argument parsing
 - Cleaned up unnecessary test files and improved .gitignore patterns
+- **VS Code Extension Command Structure** - Renamed and reorganized commands for better UX
+  - Production command simplified to "Start HTTP Server"
+  - Development commands now conditionally visible based on environment detection
+- **Documentation Restructuring** - Consolidated development vs production documentation into extension README with cross-references
 
 ## [1.6.0] - 2025-01-01
 
