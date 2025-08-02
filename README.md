@@ -216,14 +216,22 @@ The standard approach is to add the server to your MCP client configuration:
 
 1. **Add to your MCP client configuration** (see examples below)
 
-### Option 2: VS Code Extension (Alternative)
+### Option 2: VS Code Extension (Recommended for VS Code Users)
 
-If you prefer not to manage JSON configuration files, there's a VS Code extension available:
+**🚀 For the best VS Code experience, use the dedicated extension:**
 
 1. **Install the VS Code extension**: `dav3.mcp-dynamics365-extension`
 2. **Configure credentials**: Use the "Configure MCP Dynamics 365 Server" command
+3. **Start HTTP server**: Use "Start HTTP Server" command (automatic for production, local dev mode for developers)
 
-**Note**: The extension approach only works if you don't have an existing MCP configuration file, as configuration files take precedence over extension-registered servers.
+**📖 Full extension documentation**: See [`vscode-extension/README.md`](./vscode-extension/README.md) for:
+
+- Development vs Production command modes
+- Auto-detection features
+- Advanced configuration options
+- Troubleshooting guides
+
+**Note**: The extension uses HTTP transport by default and provides intelligent command visibility based on your environment (development vs production).
 
 ## Configuration Examples
 

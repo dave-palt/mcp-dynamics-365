@@ -2,6 +2,8 @@
 
 VS Code extension for seamless integration with Microsoft Dynamics 365 CRM via the Model Context Protocol.
 
+> **📖 Main Project Documentation**: For complete API documentation, tool examples, and manual setup instructions, see the [main project README](../README.md).
+
 > **⚠️ Disclaimer**: This extension was generated with AI assistance as a side project. It may not receive regular maintenance or updates. Use at your own discretion.
 
 ## Table of Contents
@@ -45,15 +47,33 @@ VS Code extension for seamless integration with Microsoft Dynamics 365 CRM via t
 
 ### Extension Commands
 
-- **`MCP Dynamics 365: Start HTTP Server`** - Start the HTTP server
+The extension provides intelligent command visibility based on your environment:
+
+#### Production Mode (Default)
+
+- **`MCP Dynamics 365: Start HTTP Server`** - Start the HTTP server using the published package
 - **`MCP Dynamics 365: Stop HTTP Server`** - Stop the HTTP server
 - **`MCP Dynamics 365: Configure MCP Dynamics 365 Server`** - Configure credentials via UI
+
+#### Development Mode (Auto-detected)
+
+All production commands PLUS:
+
+- **`MCP Dynamics 365: Start HTTP Server (Local Dev)`** - Use local built server for development
+
+**Auto-Detection**: Development commands automatically appear when:
+
+1. User setting `mcpDynamics365.enableDevelopmentCommands` is `true`, OR
+2. Workspace contains MCP server source code (`src/server.ts` or `dist/index.js`)
+
+**Manual Control**: Set `mcpDynamics365.enableDevelopmentCommands: true` in VS Code settings to force development mode in any workspace.
 
 ### Extension Settings
 
 - `mcpDynamics365.useHttpTransport`: Use HTTP transport (default: `true`)
 - `mcpDynamics365.serverUrl`: Server URL for remote connections (default: `"http://localhost:3300/mcp"`)
 - `mcpDynamics365.autoStart`: Auto-start server on VS Code startup (default: `false`)
+- `mcpDynamics365.enableDevelopmentCommands`: Enable development commands (default: `false`, auto-detected in dev workspaces)
 
 ### Available in AI Chat
 
@@ -65,7 +85,7 @@ Once the server is running, all Dynamics 365 tools are automatically available i
 - **Entity schemas**: "What fields are available on the opportunity entity?"
 - **Custom queries**: "Execute this OData query: contacts?$filter=statecode eq 0"
 
-For complete tool documentation and examples, see the [main package documentation](https://www.npmjs.com/package/@dav3/mcp-dynamics365-server).
+For complete tool documentation and examples, see the [main project documentation](../README.md#available-tools) and [NPM package](https://www.npmjs.com/package/@dav3/mcp-dynamics365-server).
 
 ## Configuration
 
