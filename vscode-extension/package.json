@@ -123,6 +123,26 @@
         "category": "MCP Dynamics 365"
       },
       {
+        "command": "mcpDynamics365.restartHttpServer",
+        "title": "Restart HTTP Server",
+        "category": "MCP Dynamics 365"
+      },
+      {
+        "command": "mcpDynamics365.showServerStatus",
+        "title": "Show Server Status",
+        "category": "MCP Dynamics 365"
+      },
+      {
+        "command": "mcpDynamics365.openConfiguration",
+        "title": "Open Configuration File",
+        "category": "MCP Dynamics 365"
+      },
+      {
+        "command": "mcpDynamics365.validateConfiguration",
+        "title": "Validate Configuration",
+        "category": "MCP Dynamics 365"
+      },
+      {
         "command": "mcpDynamics365.showOutput",
         "title": "Show Output",
         "category": "MCP Dynamics 365"
@@ -150,7 +170,19 @@
           "command": "mcpDynamics365.restart"
         },
         {
+          "command": "mcpDynamics365.restartHttpServer"
+        },
+        {
+          "command": "mcpDynamics365.showServerStatus"
+        },
+        {
           "command": "mcpDynamics365.configure"
+        },
+        {
+          "command": "mcpDynamics365.openConfiguration"
+        },
+        {
+          "command": "mcpDynamics365.validateConfiguration"
         },
         {
           "command": "mcpDynamics365.showOutput"

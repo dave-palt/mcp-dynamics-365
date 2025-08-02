@@ -14,13 +14,13 @@ echo ""
 echo "🧪 Testing server connection..."
 
 # Test if port is open
-if nc -z localhost 3300 2>/dev/null; then
-    echo "✅ Port 3300 is open"
+if nc -z localhost 3301 2>/dev/null; then
+    echo "✅ Port 3301 is open"
     
     echo ""
     echo "🔗 Testing MCP initialization..."
     
-    response=$(curl -s -X POST http://localhost:3300/mcp \
+    response=$(curl -s -X POST http://localhost:3301/mcp \
       -H "Content-Type: application/json" \
       -H "Accept: application/json, text/event-stream" \
       -d '{
@@ -45,7 +45,7 @@ if nc -z localhost 3300 2>/dev/null; then
         echo "📋 Response: $response"
     fi
 else
-    echo "❌ Port 3300 is not open"
+    echo "❌ Port 3301 is not open"
     echo "🔧 Make sure the extension server is running"
 fi
 

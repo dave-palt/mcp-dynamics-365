@@ -26,68 +26,68 @@ function registerCommands(context: vscode.ExtensionContext) {
     const commands = [
         // HTTP Server Commands
         {
-            command: 'mcpDynamics365.startHttpServerLocal',
+            command: 'mcp-dynamics365.startHttpServerLocal',
             handler: () => httpCommands.startLocalHttpServer(),
             title: 'MCP D365: Start Local HTTP Server'
         },
         {
-            command: 'mcpDynamics365.startHttpServer',
+            command: 'mcp-dynamics365.startHttpServer',
             handler: () => httpCommands.startProductionHttpServer(),
             title: 'MCP D365: Start HTTP Server'
         },
         {
-            command: 'mcpDynamics365.stopHttpServer',
+            command: 'mcp-dynamics365.stopHttpServer',
             handler: () => httpCommands.stopHttpServer(),
             title: 'MCP D365: Stop HTTP Server'
         },
         {
-            command: 'mcpDynamics365.restartHttpServer',
+            command: 'mcp-dynamics365.restartHttpServer',
             handler: () => httpCommands.restartHttpServer(),
             title: 'MCP D365: Restart HTTP Server'
         },
         {
-            command: 'mcpDynamics365.showServerStatus',
+            command: 'mcp-dynamics365.showServerStatus',
             handler: () => httpCommands.showServerStatus(),
             title: 'MCP D365: Show Server Status'
         },
 
         // Configuration Commands
         {
-            command: 'mcpDynamics365.configure',
+            command: 'mcp-dynamics365.configure',
             handler: () => configCommands.configureConnection(),
             title: 'MCP D365: Configure Connection'
         },
         {
-            command: 'mcpDynamics365.openConfiguration',
+            command: 'mcp-dynamics365.openConfiguration',
             handler: () => configCommands.openConfiguration(),
             title: 'MCP D365: Open Configuration'
         },
         {
-            command: 'mcpDynamics365.validateConfiguration',
+            command: 'mcp-dynamics365.validateConfiguration',
             handler: () => configCommands.validateConfiguration(),
             title: 'MCP D365: Validate Configuration'
         },
 
         // Legacy Commands (stdio)
         {
-            command: 'mcpDynamics365.start',
+            command: 'mcp-dynamics365.start',
             handler: () => legacyCommands.startServer(),
             title: 'MCP D365: Start Server (stdio)'
         },
         {
-            command: 'mcpDynamics365.stop',
+            command: 'mcp-dynamics365.stop',
             handler: () => legacyCommands.stopServer(),
             title: 'MCP D365: Stop Server (stdio)'
         },
         {
-            command: 'mcpDynamics365.restart',
+            command: 'mcp-dynamics365.restart',
             handler: () => legacyCommands.restartServer(),
             title: 'MCP D365: Restart Server (stdio)'
         },
 
         // Utility Commands
         {
-            command: 'mcpDynamics365.showOutput',
+            command: 'mcp-dynamics365.showOutput',
             handler: () => mcpProvider.showOutput(),
             title: 'MCP D365: Show Output'
         }
