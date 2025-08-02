@@ -44,6 +44,11 @@
           "default": 3300,
           "description": "Port for the HTTP server (default: 3300)"
         },
+        "mcpDynamics365.httpHost": {
+          "type": "string",
+          "default": "localhost",
+          "description": "Host for the HTTP server (default: localhost)"
+        },
         "mcpDynamics365.useHttpTransport": {
           "type": "boolean",
           "default": true,

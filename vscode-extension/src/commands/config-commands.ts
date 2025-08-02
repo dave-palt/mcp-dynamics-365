@@ -210,11 +210,11 @@ export class ConfigCommands {
         // Fallback to VS Code settings
         if (Object.keys(config).length === 0) {
             config = {
-                baseUrl: ConfigurationHelper.getOptionalConfigValue('d365.baseUrl'),
-                clientId: ConfigurationHelper.getOptionalConfigValue('d365.clientId'),
-                clientSecret: ConfigurationHelper.getOptionalConfigValue('d365.clientSecret'),
-                tenantId: ConfigurationHelper.getOptionalConfigValue('d365.tenantId'),
-                resource: ConfigurationHelper.getOptionalConfigValue('d365.resource')
+                baseUrl: ConfigurationHelper.getOptionalConfigValue('baseUrl'),
+                clientId: ConfigurationHelper.getOptionalConfigValue('clientId'),
+                clientSecret: ConfigurationHelper.getOptionalConfigValue('clientSecret'),
+                tenantId: ConfigurationHelper.getOptionalConfigValue('tenantId'),
+                resource: ConfigurationHelper.getOptionalConfigValue('resource')
             };
             source = 'VS Code settings';
         }

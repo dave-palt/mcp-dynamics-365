@@ -29,10 +29,12 @@ VS Code extension for seamless integration with Microsoft Dynamics 365 CRM via t
 ## Quick Start
 
 1. **Install the extension** from the VS Code marketplace
-2. **Configure your Dynamics 365 credentials** (see Configuration section below)
-3. **Start the HTTP server**: Use "MCP Dynamics 365: Start HTTP Server" command
-4. **Server automatically available**: The extension automatically registers the HTTP server with VS Code's AI features
-5. **Fallback (if needed)**: If automatic registration doesn't work, manually add to your `mcp.json`:
+2. **Install the MCP server globally**: `npm install -g @dav3/mcp-dynamics365-server`
+   > **⚠️ Note**: HTTP transport requires version 2.0.0 or later
+3. **Configure your Dynamics 365 credentials** (see Configuration section below)
+4. **Start the HTTP server**: Use "MCP Dynamics 365: Start HTTP Server" command
+5. **Server automatically available**: The extension automatically registers the HTTP server with VS Code's AI features
+6. **Fallback (if needed)**: If automatic registration doesn't work, manually add to your `mcp.json`:
    ```json
    {
      "servers": {
@@ -70,10 +72,19 @@ All production commands PLUS:
 
 ### Extension Settings
 
-- `mcpDynamics365.useHttpTransport`: Use HTTP transport (default: `true`)
-- `mcpDynamics365.serverUrl`: Server URL for remote connections (default: `"http://localhost:3300/mcp"`)
-- `mcpDynamics365.autoStart`: Auto-start server on VS Code startup (default: `false`)
+- `mcpDynamics365.useHttpTransport`: Use HTTP transport instead of stdio (default: `true`)
+- `mcpDynamics365.serverUrl`: URL of the running MCP Dynamics 365 HTTP server (default: `"http://localhost:3300/mcp"`)
+- `mcpDynamics365.httpPort`: Port for the HTTP server (default: `3300`)
+- `mcpDynamics365.httpHost`: Host for the HTTP server (default: `localhost`)
+- `mcpDynamics365.autoStart`: Automatically start the MCP server when VS Code starts (default: `false`)
 - `mcpDynamics365.enableDevelopmentCommands`: Enable development commands (default: `false`, auto-detected in dev workspaces)
+- `mcpDynamics365.serverPath`: Path to the MCP Dynamics 365 server executable for stdio transport (default: `npx @dav3/mcp-dynamics365-server`)
+  > **⚠️ Deprecated**: Stdio transport is deprecated since version 2.0.0. Use HTTP transport instead.
+- `mcpDynamics365.clientId`: Dynamics 365 Client ID (Azure AD App Registration)
+- `mcpDynamics365.clientSecret`: Dynamics 365 Client Secret (Azure AD App Registration)
+- `mcpDynamics365.tenantId`: Dynamics 365 Tenant ID (Azure AD Directory)
+- `mcpDynamics365.baseUrl`: Dynamics 365 Base URL (e.g., `https://your-org.crm.dynamics.com`)
+- `mcpDynamics365.resource`: Dynamics 365 Resource URL (usually same as Base URL)
 
 ### Available in AI Chat
 
@@ -142,6 +153,21 @@ The extension automatically registers the HTTP server with VS Code's MCP system.
   }
 }
 ```
+
+**Option D: Stdio transport (deprecated since v2.0.0):**
+
+```json
+{
+  "servers": {
+    "dynamics365-crm": {
+      "command": "npx",
+      "args": ["@dav3/mcp-dynamics365-server", "--transport=stdio"]
+    }
+  }
+}
+```
+
+> **⚠️ Deprecated**: Stdio transport is deprecated since version 2.0.0. Use HTTP transport instead.
 
 ### Method 2: Environment File
 

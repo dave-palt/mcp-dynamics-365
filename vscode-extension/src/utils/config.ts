@@ -9,7 +9,7 @@ export interface D365Config {
 }
 
 export class ConfigurationHelper {
-    private static readonly CONFIG_SECTION = 'mcp-dynamics365';
+    private static readonly CONFIG_SECTION = 'mcpDynamics365';
 
     static getConfiguration(): vscode.WorkspaceConfiguration {
         return vscode.workspace.getConfiguration(this.CONFIG_SECTION);

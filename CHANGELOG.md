@@ -5,7 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [2.0.1] - 2025-08-02
+
+### Fixed
+
+- **VS Code Extension Configuration**: Fixed missing `mcpDynamics365.httpPort` configuration registration
+- **Documentation**: Updated extension README to include all registered configuration properties
+- **Port Configuration**: Removed production/development port distinctions, now uses consistent 3300 default
+- **Test Files**: Updated test scripts to use environment variable configuration with proper defaults
+
+### Changed
+
+- **Environment Variable Usage**: Test scripts now respect `MCP_HTTP_PORT` environment variable
+- **Deprecation Notice**: Added clear deprecation warnings for stdio transport (deprecated since v2.0.0)
+- **Configuration Documentation**: Added complete configuration options including stdio transport setup
+
+## [2.0.0] - 2025-08-02
 
 ### Added
 
@@ -47,7 +62,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Development commands now conditionally visible based on environment detection
 - **Documentation Restructuring** - Consolidated development vs production documentation into extension README with cross-references
 
-## [1.6.0] - 2025-01-01
+## [1.6.0] - 2025-07
 
 ### Added
 
