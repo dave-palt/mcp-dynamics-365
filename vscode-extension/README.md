@@ -2,7 +2,7 @@
 
 VS Code extension for seamless integration with Microsoft Dynamics 365 CRM via the Model Context Protocol.
 
-> **📖 Main Project Documentation**: For complete API documentation, tool examples, and manual setup instructions, see the [main project README](../README.md).
+> **📖 Main Project Documentation**: For complete API documentation, tool examples, and manual setup instructions, see the [main project README](https://github.com/dave-palt/mcp-dynamics-365#readme).
 
 > **⚠️ Disclaimer**: This extension was generated with AI assistance as a side project. It may not receive regular maintenance or updates. Use at your own discretion.
 
@@ -75,7 +75,6 @@ All production commands PLUS:
 - `mcpDynamics365.useHttpTransport`: Use HTTP transport instead of stdio (default: `true`)
 - `mcpDynamics365.serverUrl`: URL of the running MCP Dynamics 365 HTTP server (default: `"http://localhost:3300/mcp"`)
 - `mcpDynamics365.httpPort`: Port for the HTTP server (default: `3300`)
-- `mcpDynamics365.httpHost`: Host for the HTTP server (default: `localhost`)
 - `mcpDynamics365.autoStart`: Automatically start the MCP server when VS Code starts (default: `false`)
 - `mcpDynamics365.enableDevelopmentCommands`: Enable development commands (default: `false`, auto-detected in dev workspaces)
 - `mcpDynamics365.serverPath`: Path to the MCP Dynamics 365 server executable for stdio transport (default: `npx @dav3/mcp-dynamics365-server`)
@@ -90,13 +89,27 @@ All production commands PLUS:
 
 Once the server is running, all Dynamics 365 tools are automatically available in VS Code's AI features:
 
+#### Available Tools
+
+- **`get_entity_schema`** - Get entity metadata and field definitions
+- **`list_entities`** - List all available entity sets in Dynamics 365
+- **`query_entities`** - Query entities with filtering, sorting, and selection
+- **`get_entity`** - Get a specific entity record by ID
+- **`create_entity`** - Create new entity records
+- **`update_entity`** - Update existing entity records
+- **`delete_entity`** - Delete entity records
+- **`execute_odata_query`** - Execute custom OData queries directly
+- **`execute_function`** - Call Dynamics 365 functions and actions
+
+#### Example AI Requests
+
 - **Query entities**: "Show me all contacts with email containing 'example.com'"
 - **Create records**: "Create a new account for Contoso Ltd"
 - **Update records**: "Update contact John Doe's phone number"
 - **Entity schemas**: "What fields are available on the opportunity entity?"
 - **Custom queries**: "Execute this OData query: contacts?$filter=statecode eq 0"
 
-For complete tool documentation and examples, see the [main project documentation](../README.md#available-tools) and [NPM package](https://www.npmjs.com/package/@dav3/mcp-dynamics365-server).
+> **📋 For complete tool documentation**: See the [main project documentation](https://github.com/dave-palt/mcp-dynamics-365#available-tools) for detailed parameter descriptions, examples, and naming conventions.
 
 ## Configuration
 
@@ -245,102 +258,4 @@ This is a side project with limited maintenance. For issues:
 
 ## License
 
-MIT License - see the [LICENSE](../LICENSE) file for details.
-
-#### `execute_function` - Call Dynamics 365 functions
-
-Ask: "Who am I in the system?"
-
-```json
-{
-  "tool": "execute_function",
-  "arguments": {
-    "functionName": "WhoAmI",
-    "method": "GET"
-  }
-}
-```
-
-### 4. Advanced Operations
-
-#### `execute_odata_query` - Custom OData queries
-
-Ask: "Execute a custom query to find active opportunities over $10,000"
-
-```json
-{
-  "tool": "execute_odata_query",
-  "arguments": {
-    "query": "opportunities?$filter=statecode eq 0 and estimatedvalue gt 10000&$select=name,estimatedvalue,createdon&$orderby=estimatedvalue desc"
-  }
-}
-```
-
-#### `execute_function` - Call Dynamics 365 functions
-
-Ask: "Who am I currently logged in as?"
-
-```json
-{
-  "tool": "execute_function",
-  "arguments": {
-    "functionName": "WhoAmI",
-    "method": "GET"
-  }
-}
-```
-
-### Common Entity Sets
-
-- `accounts` - Companies and organizations
-- `contacts` - Individual people
-- `leads` - Potential customers
-- `opportunities` - Sales opportunities
-- `cases` - Customer service cases
-- `tasks` - Task records
-- `appointments` - Calendar appointments
-- `emails` - Email messages
-- `phonecalls` - Phone call records
-
-### Useful OData Filters
-
-- **Date filters**: `createdon ge 2025-01-01T00:00:00Z`
-- **String filters**: `contains(lastname, 'Smith')`, `startswith(emailaddress1, 'john')`
-- **Number filters**: `estimatedvalue gt 10000`
-- **Status filters**: `statecode eq 0` (active records)
-- **Combine filters**: `firstname eq 'John' and statecode eq 0`
-
-### Example AI Conversations
-
-**"Find all contacts from Acme Corporation"**
-
-- Uses `query_entities` with expand and filter on parent customer
-
-**"Create a contact and then update their phone number"**
-
-- Uses `create_entity` followed by `update_entity`
-
-**"What fields are available for opportunities?"**
-
-- Uses `get_entity_schema` to show all opportunity fields
-
-**"Show me recent high-value opportunities"**
-
-- Uses `execute_odata_query` with date and value filters## Configuration
-
-The extension can be configured through VS Code settings:
-
-- `mcpDynamics365.serverPath`: Path to the MCP server executable (default: `npx @dav3/mcp-dynamics365-server`)
-- `mcpDynamics365.autoStart`: Automatically start server when VS Code starts (default: false)
-
-## Support & Maintenance
-
-This extension was created with AI assistance as a side project. Please note:
-
-- Limited maintenance and support
-- Community contributions welcome
-- Fork recommended for production use
-
-## License
-
-MIT
+MIT License - see the [LICENSE](https://github.com/dave-palt/mcp-dynamics-365/blob/master/LICENSE) file for details.

@@ -1,8 +1,6 @@
 # Dynamics 365 CRM MCP Server
 
-A comprehensive Model Context Protocol (MCP) server for interacting with Microsoft Dynamics 365 CRM. This server provides AI agents with the ability to perform CRUD operations, query data, fetch sc}
-
-````
+A comprehensive Model Context Protocol (MCP) server for interacting with Microsoft Dynamics 365 CRM. This server provides AI agents with the ability to perform CRUD operations, query data, fetch schemas, and execute custom operations on Dynamics 365 entities.
 
 ### Remote Server (HTTP Transport)
 
@@ -14,7 +12,7 @@ pnpm run dev:http
 
 # Or start server for remote access (binds to all interfaces)
 pnpm run start:http-remote
-````
+```
 
 #### For VS Code
 
@@ -72,7 +70,7 @@ For remote servers:
 
 **Note:** When using HTTP transport, the server must be running separately and environment variables must be configured on the server side (not in the client configuration).
 
-**Note:** Environment variables must be explicitly specified in the MCP configuration. The server does not automatically load `.env` files when run via MCP clients.emas, and execute custom operations on Dynamics 365 entities.
+**Note:** Environment variables must be explicitly specified in the MCP configuration. The server does not automatically load `.env` files when run via MCP clients.
 
 > **⚠️ Disclaimer**: This project was generated with the assistance of AI as a side project. While functional, it may not receive regular maintenance or updates. Use at your own discretion and consider forking if you need ongoing support.
 
@@ -209,7 +207,7 @@ Test the HTTP transport using the included test script:
 node dist/index.js --transport=http
 
 # In another terminal, run the test
-node test-streamable-http.js
+node tests/integration/test-streamable-http.js
 ```
 
 ## MCP Integration
@@ -276,7 +274,7 @@ Add to your `mcp.json` or `settings.json`:
 
 **settings.json** (untested)
 
-````json
+```json
 {
   "mcp.servers": {
     "dynamics365": {
@@ -292,7 +290,9 @@ Add to your `mcp.json` or `settings.json`:
     }
   }
 }
-```#### For Claude Desktop
+```
+
+#### For Claude Desktop
 
 Add to your `claude_desktop_config.json`:
 
@@ -312,7 +312,7 @@ Add to your `claude_desktop_config.json`:
     }
   }
 }
-````
+```
 
 **Note:** Environment variables must be explicitly specified in the MCP configuration. The server does not automatically load `.env` files when run via MCP clients.
 
@@ -591,10 +591,6 @@ pnpm run test:read-tools
 pnpm run typecheck
 ```
 
-## License
-
-MIT License
-
 ## Support
 
 For issues and questions:
@@ -640,7 +636,7 @@ If you need reliable, maintained software for production use, consider:
 - Contributing to make this project more robust
 - Looking for alternative commercial solutions
 
-## AI Generation Notice
+### AI Generation Notice
 
 This project was created with the assistance of AI tools. While the code has been reviewed and tested, users should:
 
