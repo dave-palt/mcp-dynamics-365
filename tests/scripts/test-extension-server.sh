@@ -1,10 +1,21 @@
 #!/bin/bash
 
+# Load environment variables from .env file if it exists
+if [ -f "../../.env" ]; then
+    export $(grep -v '^#' ../../.env | xargs)
+fi
+
+# Use environment variable or default port
+MCP_HTTP_PORT=${MCP_HTTP_PORT:-3300}
+MCP_HTTP_HOST=${MCP_HTTP_HOST:-localhost}
+
 echo "🔍 Testing VS Code Extension Server..."
 echo "ℹ️  Make sure you've started the server via the VS Code extension first:"
 echo "   1. Open Command Palette (Cmd+Shift+P)"
-echo "   2. Run: 'MCP Dynamics 365: Start HTTP Server'"
+echo "   2. Run: 'MCP Dynamics 365: Start HTTP Server (Local Dev)'"
 echo "   3. Check the 'MCP Dynamics 365' output channel"
+echo ""
+echo "🔧 Configured to test: ${MCP_HTTP_HOST}:${MCP_HTTP_PORT}"
 echo ""
 
 # Wait for user confirmation
@@ -14,13 +25,13 @@ echo ""
 echo "🧪 Testing server connection..."
 
 # Test if port is open
-if nc -z localhost 3301 2>/dev/null; then
-    echo "✅ Port 3301 is open"
+if nc -z ${MCP_HTTP_HOST} ${MCP_HTTP_PORT} 2>/dev/null; then
+    echo "✅ Port ${MCP_HTTP_PORT} is open"
     
     echo ""
     echo "🔗 Testing MCP initialization..."
     
-    response=$(curl -s -X POST http://localhost:3301/mcp \
+    response=$(curl -s -X POST http://${MCP_HTTP_HOST}:${MCP_HTTP_PORT}/mcp \
       -H "Content-Type: application/json" \
       -H "Accept: application/json, text/event-stream" \
       -d '{
@@ -45,7 +56,7 @@ if nc -z localhost 3301 2>/dev/null; then
         echo "📋 Response: $response"
     fi
 else
-    echo "❌ Port 3301 is not open"
+    echo "❌ Port ${MCP_HTTP_PORT} is not open"
     echo "🔧 Make sure the extension server is running"
 fi
 

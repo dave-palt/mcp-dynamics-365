@@ -31,6 +31,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **Major Code Refactoring** - Modularized large files for better maintainability
+  - Split `server.ts` (902 lines) into modular components in `src/tools/` and `src/transports/`
+  - Extracted tool implementations: `schema-tools.ts`, `entity-tools.ts`, `query-tools.ts`
+  - Separated transport logic: `http-transport.ts`, `stdio-transport.ts`
+  - VS Code extension (623 lines) refactored into modular structure with `providers/`, `commands/`, and `utils/`
+  - Improved code organization and separation of concerns
 - Updated server class to support both stdio and HTTP transports
 - Added express and cors dependencies for HTTP transport
 - Enhanced index.js with command line argument parsing

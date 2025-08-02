@@ -28,14 +28,29 @@ export class ConfigurationHelper {
     }
 
     static getHttpPort(): number {
+        // Check environment variable first
+        const envPort = process.env.MCP_HTTP_PORT;
+        if (envPort) {
+            const port = parseInt(envPort);
+            if (!isNaN(port) && port > 0 && port <= 65535) {
+                return port;
+            }
+        }
+
+        // Fall back to VS Code configuration
         return this.getConfigValue<number>('httpPort', 3300);
     }
 
     static getHttpHost(): string {
-        return this.getConfigValue<string>('httpHost', 'localhost');
-    }
+        // Check environment variable first
+        const envHost = process.env.MCP_HTTP_HOST;
+        if (envHost && envHost.trim() !== '') {
+            return envHost.trim();
+        }
 
-    static async setHttpPort(port: number): Promise<void> {
+        // Fall back to VS Code configuration
+        return this.getConfigValue<string>('httpHost', 'localhost');
+    } static async setHttpPort(port: number): Promise<void> {
         await this.setConfigValue('httpPort', port);
     }
 

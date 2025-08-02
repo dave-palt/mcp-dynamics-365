@@ -25,7 +25,8 @@ export class EnvironmentDetector {
             };
         }
 
-        const packageJsonPath = path.join(workspacePath, 'package.json');
+        // Load .env file if it exists
+        this.loadEnvFile(workspacePath); const packageJsonPath = path.join(workspacePath, 'package.json');
         const envFilePath = path.join(workspacePath, '.env');
         const hasPackageJson = fs.existsSync(packageJsonPath);
         const hasEnvFile = fs.existsSync(envFilePath);
@@ -75,10 +76,18 @@ export class EnvironmentDetector {
     }
 
     static getRecommendedPort(env: EnvironmentInfo): number {
-        // Use different default ports for local vs production
-        return env.isLocal ? 3301 : 3300;
-    }
+        // Check environment variable first
+        const envPort = process.env.MCP_HTTP_PORT;
+        if (envPort) {
+            const port = parseInt(envPort);
+            if (!isNaN(port) && port > 0 && port <= 65535) {
+                return port;
+            }
+        }
 
+        // Use different default ports for local vs production
+        return 3300;
+    }
     static getServerDisplayName(env: EnvironmentInfo): string {
         return env.isLocal ? 'Local Development Server' : 'MCP Dynamics 365 Server';
     }
@@ -102,5 +111,43 @@ export class EnvironmentDetector {
         }
 
         return help;
+    }
+
+    private static loadEnvFile(workspacePath: string): void {
+        const envPath = path.join(workspacePath, '.env');
+
+        if (!fs.existsSync(envPath)) {
+            return;
+        }
+
+        try {
+            const envContent = fs.readFileSync(envPath, 'utf8');
+            const lines = envContent.split('\n');
+
+            for (const line of lines) {
+                const trimmedLine = line.trim();
+
+                // Skip empty lines and comments
+                if (!trimmedLine || trimmedLine.startsWith('#')) {
+                    continue;
+                }
+
+                // Parse KEY=VALUE format
+                const equalIndex = trimmedLine.indexOf('=');
+                if (equalIndex === -1) {
+                    continue;
+                }
+
+                const key = trimmedLine.substring(0, equalIndex).trim();
+                const value = trimmedLine.substring(equalIndex + 1).trim();
+
+                // Only set if not already set (don't override existing env vars)
+                if (key && !process.env[key]) {
+                    process.env[key] = value;
+                }
+            }
+        } catch (error) {
+            console.warn('Failed to load .env file:', error);
+        }
     }
 }

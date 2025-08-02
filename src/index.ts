@@ -6,8 +6,15 @@ async function main() {
     // Parse command line arguments
     const args = process.argv.slice(2);
     let transport: 'stdio' | 'http' = 'stdio';
-    let port = 3300;
-    let host = 'localhost';
+
+    // Get defaults from environment variables or use fallbacks
+    let port = parseInt(process.env.MCP_HTTP_PORT || '3300');
+    let host = process.env.MCP_HTTP_HOST || 'localhost';
+
+    // Validate environment port
+    if (isNaN(port) || port < 1 || port > 65535) {
+      port = 3300;
+    }
 
     // Check for transport argument
     const transportFlag = args.find(arg => arg.startsWith('--transport='));
