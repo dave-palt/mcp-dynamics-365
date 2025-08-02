@@ -2,7 +2,7 @@
 
 ## Read Tools Test Suite
 
-The `test-read-tools.js` file (not committed to git) provides comprehensive testing for all read-only tools in the MCP server.
+The `tests/integration/test-read-tools.js` file (not committed to git) provides comprehensive testing for all read-only tools in the MCP server.
 
 ### Setup
 

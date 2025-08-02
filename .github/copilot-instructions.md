@@ -101,7 +101,7 @@ src/
 └── types.ts         # TypeScript type definitions
 
 vscode-extension/    # VS Code extension for easier setup
-test-read-tools.js   # Test file (not committed to git)
+test-integration/     # Integration test files (not committed to git)
 ```
 
 ## Development Guidelines
@@ -138,7 +138,7 @@ D365_RESOURCE=https://your-org.crm.dynamics.com
 
 ### Testing
 
-- `test-read-tools.js` tests all read-only operations
+- `tests/integration/test-read-tools.js` tests all read-only operations
 - Uses actual API client, not mocked data
 - Only tests standard entities available in all D365 environments
 - File is excluded from git commits
@@ -211,7 +211,7 @@ Use these standard entities in examples and tests:
 3. Implement the private method
 4. Add corresponding API client method if needed
 5. Update documentation
-6. Add test coverage in `test-read-tools.js`
+6. Add test coverage in `tests/integration/test-read-tools.js`
 7. Follow naming conventions consistently
 8. **Update CHANGELOG.md** with the new feature
 9. **Update .gitignore** if new files or patterns need to be excluded

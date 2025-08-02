@@ -16,7 +16,7 @@
  */
 
 import dotenv from "dotenv";
-import { D365ApiClient } from "./dist/api-client.js";
+import { D365ApiClient } from "../../dist/api-client.js";
 
 // Load environment variables
 dotenv.config();

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 // Simple test to verify the server can start without errors
-import { D365MCPServer } from "./dist/server.js";
+import { D365MCPServer } from "../../dist/server.js";
 
 console.log("Testing MCP Server instantiation...");
 
