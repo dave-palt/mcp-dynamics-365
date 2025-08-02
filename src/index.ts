@@ -73,7 +73,7 @@ Environment Variables Required:
       process.exit(0);
     }
 
-    console.log("Starting Dynamics 365 MCP Server...");
+    console.log("Starting Dynamics 365 MCP Server...", transport);
     const server = new D365MCPServer();
     await server.run(transport, port, host);
 

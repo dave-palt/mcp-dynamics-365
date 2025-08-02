@@ -4,6 +4,7 @@ import * as path from 'path';
 import * as vscode from 'vscode';
 
 let mcpProcess: ChildProcess | undefined;
+let httpServerProcess: ChildProcess | undefined;
 let outputChannel: vscode.OutputChannel;
 
 // MCP Server Definition Provider
@@ -156,11 +157,23 @@ export function activate(context: vscode.ExtensionContext) {
     const restartCommand = vscode.commands.registerCommand('mcpDynamics365.restart', restartMCPServer);
     const configureCommand = vscode.commands.registerCommand('mcpDynamics365.configure', configureMCPServer);
 
+    // HTTP Server commands (matching package.json command IDs)
+    const startHttpLocalCommand = vscode.commands.registerCommand('mcpDynamics365.startHttpServerLocal', startHttpServerLocal);
+    const startHttpProductionCommand = vscode.commands.registerCommand('mcpDynamics365.startHttpServerProduction', startHttpServerProduction);
+    const stopHttpCommand = vscode.commands.registerCommand('mcpDynamics365.stopHttpServer', stopHttpServer);
+    const showOutputCommand = vscode.commands.registerCommand('mcpDynamics365.showOutput', () => {
+        outputChannel.show();
+    });
+
     context.subscriptions.push(
         startCommand,
         stopCommand,
         restartCommand,
         configureCommand,
+        startHttpLocalCommand,
+        startHttpProductionCommand,
+        stopHttpCommand,
+        showOutputCommand,
         outputChannel
     );
 
@@ -399,5 +412,177 @@ D365_API_VERSION=v9.2
         } catch (error) {
             vscode.window.showErrorMessage(`Failed to create configuration file: ${error}`);
         }
+    }
+}
+
+// HTTP Server Management Functions
+async function startHttpServerLocal() {
+    await startHttpServerWithMode('local');
+}
+
+async function startHttpServerProduction() {
+    await startHttpServerWithMode('production');
+}
+
+async function startHttpServerWithMode(mode: 'local' | 'production') {
+    if (httpServerProcess && httpServerProcess.exitCode === null) {
+        outputChannel.appendLine('⚠️ HTTP server is already running');
+        vscode.window.showWarningMessage('HTTP server is already running');
+        return;
+    }
+
+    outputChannel.appendLine(`🚀 === Starting HTTP Server (${mode === 'local' ? 'Local Dev' : 'Production'}) ===`);
+
+    const workspaceFolder = vscode.workspace.workspaceFolders?.[0];
+    if (!workspaceFolder) {
+        outputChannel.appendLine('❌ No workspace folder found');
+        vscode.window.showErrorMessage('No workspace folder found');
+        return;
+    }
+
+    // Load environment variables from .env file
+    const envPath = path.join(workspaceFolder.uri.fsPath, '.env');
+    let envVars = { ...process.env };
+
+    if (fs.existsSync(envPath)) {
+        try {
+            const envContent = fs.readFileSync(envPath, 'utf8');
+            const envLines = envContent.split('\n');
+
+            for (const line of envLines) {
+                const trimmed = line.trim();
+                if (trimmed && !trimmed.startsWith('#')) {
+                    const [key, ...valueParts] = trimmed.split('=');
+                    if (key && valueParts.length > 0) {
+                        const value = valueParts.join('=').replace(/^["']|["']$/g, '');
+                        envVars[key.trim()] = value;
+                    }
+                }
+            }
+            outputChannel.appendLine(`✅ Loaded environment variables from: ${envPath}`);
+        } catch (envError) {
+            outputChannel.appendLine(`⚠️ Warning: Could not load .env file: ${envError}`);
+        }
+    }
+
+    // Check for required environment variables
+    const requiredVars = ['D365_CLIENT_ID', 'D365_CLIENT_SECRET', 'D365_TENANT_ID', 'D365_BASE_URL', 'D365_RESOURCE'];
+    const missingVars = requiredVars.filter(varName => !envVars[varName]);
+
+    if (missingVars.length > 0) {
+        outputChannel.appendLine(`❌ Missing required environment variables: ${missingVars.join(', ')}`);
+        vscode.window.showErrorMessage(`Missing required environment variables: ${missingVars.join(', ')}`);
+        return;
+    }
+
+    try {
+        let command: string;
+        let args: string[];
+
+        if (mode === 'local') {
+            // Force use local server path for development
+            // When using main project as workspace, dist folder is directly in workspace
+            const localServerPath = path.join(workspaceFolder.uri.fsPath, 'dist', 'index.js');
+            if (fs.existsSync(localServerPath)) {
+                outputChannel.appendLine(`🎯 Using local development server: ${localServerPath}`);
+                command = 'node';
+                args = [localServerPath, '--transport=http', '--port=3300'];
+            } else {
+                outputChannel.appendLine(`❌ Local server not found at: ${localServerPath}`);
+                outputChannel.appendLine('💡 Run "pnpm run build" in the main project to build the server');
+                outputChannel.appendLine(`💡 Expected path: ${localServerPath}`);
+                vscode.window.showErrorMessage('Local server not found. Please build the project first.');
+                return;
+            }
+        } else {
+            // Force use production npx version
+            outputChannel.appendLine('🌐 Using production server via npx');
+            command = 'npx';
+            args = ['@dav3/mcp-dynamics365-server', '--transport=http', '--port=3300'];
+        }
+
+        httpServerProcess = spawn(command, args, {
+            stdio: ['pipe', 'pipe', 'pipe'],
+            shell: true,
+            env: envVars,
+            cwd: workspaceFolder.uri.fsPath
+        });
+
+        httpServerProcess.stdout?.on('data', (data) => {
+            const output = data.toString().trim();
+            outputChannel.appendLine(`📤 [HTTP STDOUT] ${output}`);
+
+            // Detect HTTP server startup
+            if (output.includes('HTTP server running on') || output.includes('HTTP server listening on port')) {
+                const portMatch = output.match(/(?:port |:)(\d+)/);
+                if (portMatch) {
+                    outputChannel.appendLine(`🎯 HTTP Server Started: http://localhost:${portMatch[1]}`);
+                }
+            }
+        });
+
+        httpServerProcess.stderr?.on('data', (data) => {
+            const error = data.toString().trim();
+            outputChannel.appendLine(`⚠️ [HTTP STDERR] ${error}`);
+        });
+
+        httpServerProcess.on('close', (code) => {
+            outputChannel.appendLine(`🔌 HTTP server process exited with code ${code}`);
+            if (code !== 0) {
+                vscode.window.showErrorMessage(`HTTP server exited with error code ${code}`);
+            }
+            httpServerProcess = undefined;
+        });
+
+        httpServerProcess.on('error', (error) => {
+            outputChannel.appendLine(`❌ HTTP server process error: ${error.message}`);
+            vscode.window.showErrorMessage(`Failed to start HTTP server: ${error.message}`);
+            httpServerProcess = undefined;
+        });
+
+        // Wait a moment to see if the server starts successfully
+        await new Promise(resolve => setTimeout(resolve, 2000));
+
+        if (httpServerProcess && httpServerProcess.exitCode === null) {
+            outputChannel.appendLine(`✅ HTTP server process started (PID: ${httpServerProcess.pid})`);
+            const modeText = mode === 'local' ? 'Local Development' : 'Production';
+            vscode.window.showInformationMessage(`${modeText} HTTP server started successfully on port 3300`);
+            outputChannel.appendLine(`🌐 ${modeText} HTTP server started successfully`);
+        }
+
+    } catch (error) {
+        outputChannel.appendLine(`❌ Failed to start HTTP server: ${error}`);
+        vscode.window.showErrorMessage(`Failed to start HTTP server: ${error}`);
+    }
+}
+
+async function stopHttpServer() {
+    if (!httpServerProcess || httpServerProcess.exitCode !== null) {
+        outputChannel.appendLine('⚠️ HTTP server is not running');
+        vscode.window.showWarningMessage('HTTP server is not running');
+        return;
+    }
+
+    outputChannel.appendLine('🛑 === Stopping HTTP Server ===');
+
+    try {
+        httpServerProcess.kill('SIGTERM');
+
+        // Wait for graceful shutdown
+        await new Promise(resolve => setTimeout(resolve, 2000));
+
+        // Force kill if still running
+        if (httpServerProcess && httpServerProcess.exitCode === null) {
+            outputChannel.appendLine('🔨 Force killing HTTP server...');
+            httpServerProcess.kill('SIGKILL');
+        }
+
+        httpServerProcess = undefined;
+        outputChannel.appendLine('✅ HTTP server stopped');
+        vscode.window.showInformationMessage('HTTP server stopped');
+
+    } catch (error) {
+        outputChannel.appendLine(`❌ Error stopping HTTP server: ${error}`);
+        vscode.window.showErrorMessage(`Error stopping HTTP server: ${error}`);
     }
 }

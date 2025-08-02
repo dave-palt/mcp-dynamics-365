@@ -6,7 +6,7 @@
   "publisher": "dav3",
   "icon": "images/icon.png",
   "engines": {
-    "vscode": "^1.74.0"
+    "vscode": "^1.85.0"
   },
   "categories": [
     "Other"
@@ -34,10 +34,25 @@
     "configuration": {
       "title": "MCP Dynamics 365",
       "properties": {
+        "mcpDynamics365.serverUrl": {
+          "type": "string",
+          "default": "http://localhost:3300/mcp",
+          "description": "URL of the running MCP Dynamics 365 HTTP server"
+        },
+        "mcpDynamics365.httpPort": {
+          "type": "number",
+          "default": 3300,
+          "description": "Port for the HTTP server (default: 3300)"
+        },
+        "mcpDynamics365.useHttpTransport": {
+          "type": "boolean",
+          "default": true,
+          "description": "Use HTTP transport instead of stdio (recommended)"
+        },
         "mcpDynamics365.serverPath": {
           "type": "string",
           "default": "npx @dav3/mcp-dynamics365-server",
-          "description": "Path to the MCP Dynamics 365 server executable"
+          "description": "Path to the MCP Dynamics 365 server executable (used only when HTTP transport is disabled)"
         },
         "mcpDynamics365.autoStart": {
           "type": "boolean",
@@ -68,28 +83,57 @@
     },
     "commands": [
       {
+        "command": "mcpDynamics365.startHttpServerLocal",
+        "title": "Start HTTP Server (Local Dev)",
+        "category": "MCP Dynamics 365"
+      },
+      {
+        "command": "mcpDynamics365.startHttpServerProduction",
+        "title": "Start HTTP Server (Production)",
+        "category": "MCP Dynamics 365"
+      },
+      {
+        "command": "mcpDynamics365.stopHttpServer",
+        "title": "Stop HTTP Server",
+        "category": "MCP Dynamics 365"
+      },
+      {
         "command": "mcpDynamics365.start",
-        "title": "Start MCP Dynamics 365 Server",
-        "category": "MCP"
+        "title": "Start MCP Dynamics 365 Server (Legacy Stdio)",
+        "category": "MCP Dynamics 365"
       },
       {
         "command": "mcpDynamics365.stop",
-        "title": "Stop MCP Dynamics 365 Server",
-        "category": "MCP"
+        "title": "Stop MCP Dynamics 365 Server (Legacy Stdio)",
+        "category": "MCP Dynamics 365"
       },
       {
         "command": "mcpDynamics365.restart",
         "title": "Restart MCP Dynamics 365 Server",
-        "category": "MCP"
+        "category": "MCP Dynamics 365"
       },
       {
         "command": "mcpDynamics365.configure",
         "title": "Configure MCP Dynamics 365 Server",
-        "category": "MCP"
+        "category": "MCP Dynamics 365"
+      },
+      {
+        "command": "mcpDynamics365.showOutput",
+        "title": "Show Output",
+        "category": "MCP Dynamics 365"
       }
     ],
     "menus": {
       "commandPalette": [
+        {
+          "command": "mcpDynamics365.startHttpServerLocal"
+        },
+        {
+          "command": "mcpDynamics365.startHttpServerProduction"
+        },
+        {
+          "command": "mcpDynamics365.stopHttpServer"
+        },
         {
           "command": "mcpDynamics365.start"
         },
@@ -101,6 +145,9 @@
         },
         {
           "command": "mcpDynamics365.configure"
+        },
+        {
+          "command": "mcpDynamics365.showOutput"
         }
       ]
     }
@@ -113,9 +160,9 @@
     "publish": "npm run compile && npx @vscode/vsce publish"
   },
   "devDependencies": {
-    "@types/vscode": "^1.74.0",
-    "@types/node": "^20.x",
-    "typescript": "^5.0.0"
+    "@types/vscode": "^1.85.0",
+    "@types/node": "^20.19.9",
+    "typescript": "^5.9.2"
   },
   "repository": {
     "type": "git",

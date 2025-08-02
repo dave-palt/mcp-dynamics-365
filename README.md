@@ -1,6 +1,78 @@
 # Dynamics 365 CRM MCP Server
 
-A comprehensive Model Context Protocol (MCP) server for interacting with Microsoft Dynamics 365 CRM. This server provides AI agents with the ability to perform CRUD operations, query data, fetch schemas, and execute custom operations on Dynamics 365 entities.
+A comprehensive Model Context Protocol (MCP) server for interacting with Microsoft Dynamics 365 CRM. This server provides AI agents with the ability to perform CRUD operations, query data, fetch sc}
+
+````
+
+### Remote Server (HTTP Transport)
+
+This connects to a running HTTP server instance. First, start the server:
+
+```bash
+# Start server on default port (3300) for local access
+pnpm run dev:http
+
+# Or start server for remote access (binds to all interfaces)
+pnpm run start:http-remote
+````
+
+#### For VS Code
+
+Add to your `mcp.json`:
+
+```json
+{
+  "servers": {
+    "dynamics365-crm-http": {
+      "url": "http://localhost:3300/mcp"
+    }
+  },
+  "inputs": []
+}
+```
+
+For remote servers, replace `localhost` with the server's IP address or hostname:
+
+```json
+{
+  "servers": {
+    "dynamics365-crm-http": {
+      "url": "http://your-server-ip:3300/mcp"
+    }
+  },
+  "inputs": []
+}
+```
+
+#### For Claude Desktop
+
+Add to your `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "dynamics365-crm-http": {
+      "url": "http://localhost:3300/mcp"
+    }
+  }
+}
+```
+
+For remote servers:
+
+```json
+{
+  "mcpServers": {
+    "dynamics365-crm-http": {
+      "url": "http://your-server-ip:3300/mcp"
+    }
+  }
+}
+```
+
+**Note:** When using HTTP transport, the server must be running separately and environment variables must be configured on the server side (not in the client configuration).
+
+**Note:** Environment variables must be explicitly specified in the MCP configuration. The server does not automatically load `.env` files when run via MCP clients.emas, and execute custom operations on Dynamics 365 entities.
 
 > **⚠️ Disclaimer**: This project was generated with the assistance of AI as a side project. While functional, it may not receive regular maintenance or updates. Use at your own discretion and consider forking if you need ongoing support.
 
@@ -154,6 +226,12 @@ If you prefer not to manage JSON configuration files, there's a VS Code extensio
 **Note**: The extension approach only works if you don't have an existing MCP configuration file, as configuration files take precedence over extension-registered servers.
 
 ## Configuration Examples
+
+You can connect to the MCP server in two ways:
+
+### Local Server (Stdio Transport)
+
+This runs the server locally and connects via stdio (standard input/output):
 
 #### For VS Code
 
