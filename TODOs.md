@@ -2,8 +2,6 @@
 
 ## 🔴 High
 
-- [ ] **Authentication** - Define and implement auth strategy for HTTP mode
-
 ## 🟡 Medium
 
 - [ ] **Docker Support** - Containerization with Docker Compose
@@ -18,9 +16,14 @@
 
 ## ✅ Completed
 
+- [ ] **Authentication** - Implement auth strategy for HTTP mode following the specifications of this page https://modelcontextprotocol.io/specification/draft/basic/authorization
+  - [x] Support multiple authentication flows (JWT/JWKS and opaque/API)
+    - [x] Add OAUTH_FLOW and OAUTH_OPAQUE_USER_API env variables
+    - [x] Refactor token validation into a dedicated module
+    - [x] Update documentation and example configs for new flows
+    - [x] Link extension README to main README for authentication setup
 - MCP server with stdio transport
 - CRUD operations for D365 entities
-- OAuth 2.0 authentication
 - Schema retrieval (entity/attribute metadata)
 - OData query execution
 - VS Code extension

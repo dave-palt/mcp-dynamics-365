@@ -8,15 +8,30 @@ VS Code extension for seamless integration with Microsoft Dynamics 365 CRM via t
 
 ## Table of Contents
 
-- [Features](#features)
-- [Quick Start](#quick-start)
-- [Usage](#usage)
-- [Configuration](#configuration)
-- [When Manual Configuration is Needed](#when-manual-configuration-is-needed)
-- [Advanced Configuration](#advanced-configuration)
-- [Troubleshooting](#troubleshooting)
-- [Support](#support)
-- [License](#license)
+- [MCP Dynamics 365 VS Code Extension](#mcp-dynamics-365-vs-code-extension)
+  - [Table of Contents](#table-of-contents)
+  - [Features](#features)
+  - [Quick Start](#quick-start)
+  - [Usage](#usage)
+    - [Extension Commands](#extension-commands)
+      - [Production Mode (Default)](#production-mode-default)
+      - [Development Mode (Auto-detected)](#development-mode-auto-detected)
+    - [Extension Settings](#extension-settings)
+    - [Available in AI Chat](#available-in-ai-chat)
+      - [Available Tools](#available-tools)
+      - [Example AI Requests](#example-ai-requests)
+  - [Configuration](#configuration)
+    - [Method 1: VS Code Settings (Recommended)](#method-1-vs-code-settings-recommended)
+    - [Method 2: Environment File](#method-2-environment-file)
+  - [Authentication Setup](#authentication-setup)
+  - [When Manual Configuration is Needed](#when-manual-configuration-is-needed)
+  - [Advanced Configuration](#advanced-configuration)
+  - [Troubleshooting](#troubleshooting)
+    - [Server Won't Start](#server-wont-start)
+    - [Connection Issues](#connection-issues)
+    - [Extension Not Working](#extension-not-working)
+  - [Support](#support)
+  - [License](#license)
 
 ## Features
 
@@ -214,6 +229,10 @@ The extension automatically registers the HTTP server with VS Code's MCP system.
   }
 }
 ```
+
+## Authentication Setup
+
+For details on configuring authentication (OAuth flows, environment variables, and supported providers), see the [main project README](../README.md#authentication-modes).
 
 ## When Manual Configuration is Needed
 

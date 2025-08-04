@@ -5,7 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.0.1] - 2025-08-02
+## [2.1.0] - 2025-08-04
+
+### Authentication (High Priority)
+
+- Added support for multiple authentication flows:
+  - **JWT** (with JWKS public key validation)
+  - **Opaque token** (API-based validation, e.g. GitHub)
+- New environment variables for authentication:
+  - `OAUTH_FLOW` to select validation mode (`jwt` or `opaque`)
+  - `OAUTH_OPAQUE_USER_API` for custom API endpoint validation
+- Token validation logic refactored into a dedicated module
+- Updated authentication documentation and example configs
+- Extension README now links to main README for authentication setup
+- Example configuration for both JWT and opaque flows
+
+## [2.0.2] - 2025-08-02
 
 ### Fixed
 

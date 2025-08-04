@@ -29,6 +29,23 @@ Add to your `mcp.json`:
 }
 ```
 
+Or, if you need to use OAuth authentication (for protected servers):
+
+```json
+{
+  "servers": {
+    "dynamics365-crm-http": {
+      "url": "http://localhost:3300/mcp",
+      "oauth": {
+        "client_id": "your_github_client_id",
+        "client_secret": "your_github_client_secret"
+      }
+    }
+  },
+  "inputs": []
+}
+```
+
 For remote servers, replace `localhost` with the server's IP address or hostname:
 
 ```json
@@ -56,13 +73,17 @@ Add to your `claude_desktop_config.json`:
 }
 ```
 
-For remote servers:
+Or, if you need to use OAuth authentication (for protected servers):
 
 ```json
 {
   "mcpServers": {
     "dynamics365-crm-http": {
-      "url": "http://your-server-ip:3300/mcp"
+      "url": "http://localhost:3300/mcp",
+      "oauth": {
+        "client_id": "your_github_client_id",
+        "client_secret": "your_github_client_secret"
+      }
     }
   }
 }
@@ -124,20 +145,61 @@ pnpm install
 cp .env.example .env
 ```
 
-3. Configure your environment variables in `.env`:
+3. Configure your environment variables in `.env` (see consolidated snippet below):
 
 ```env
-# Dynamics 365 Connection
-D365_BASE_URL=https://your-org.crm.dynamics.com
-D365_CLIENT_ID=your-client-id
-D365_CLIENT_SECRET=your-client-secret
-D365_TENANT_ID=your-tenant-id
-D365_RESOURCE=https://your-org.crm.dynamics.com
+# Dynamics 365 CRM (Backend API)
+D365_BASE_URL=https://your-org.crm.dynamics.com         # Your Dynamics 365 organization URL
+D365_CLIENT_ID=your-client-id                          # Azure AD application client ID
+D365_CLIENT_SECRET=your-client-secret                  # Azure AD application client secret
+D365_TENANT_ID=your-tenant-id                         # Azure AD tenant ID
+D365_RESOURCE=https://your-org.crm.dynamics.com        # Resource URL for Dynamics 365 API
+
+# MCP OAuth Resource & Provider (Authentication)
+# Only required for HTTP transport (not needed for stdio transport)
+OAUTH_MCP_RESOURCE=http://localhost:3300
+OAUTH_AUTH_URL=https://github.com/login/oauth/authorize
+OAUTH_TOKEN_URL=https://github.com/login/oauth/access_token
+OAUTH_JWKS_URL=https://api.github.com/meta  # GitHub does not provide JWKS, so use a placeholder
+OAUTH_BASE_URL=https://github.com
+OAUTH_FLOW=opaque  # Supported values: 'jwt' (for JWT validation), 'opaque' (for API token validation)
+OAUTH_OPAQUE_USER_API=https://api.github.com/user  # Optional: endpoint for opaque token validation
 
 # HTTP Transport Configuration (Optional)
-MCP_HTTP_PORT=3300        # Default port for HTTP transport
-MCP_HTTP_HOST=localhost   # Default host for HTTP transport
+MCP_HTTP_PORT=3300        # Port for HTTP transport (default: 3300)
+MCP_HTTP_HOST=localhost   # Host for HTTP transport (default: localhost)
 ```
+
+### Variable Explanations
+
+**Dynamics 365 CRM (Backend API):**
+
+- `D365_BASE_URL`: Your Dynamics 365 organization URL
+- `D365_CLIENT_ID`: Azure AD application client ID
+- `D365_CLIENT_SECRET`: Azure AD application client secret
+- `D365_TENANT_ID`: Azure AD tenant ID
+- `D365_RESOURCE`: Resource URL for Dynamics 365 API
+
+**MCP OAuth Resource & Provider (Authentication):**
+
+- `OAUTH_MCP_RESOURCE`: The resource identifier exposed to MCP clients (used for OAuth audience)
+- `OAUTH_AUTH_URL`: OAuth 2.0 authorization endpoint
+- `OAUTH_TOKEN_URL`: OAuth 2.0 token endpoint
+- `OAUTH_JWKS_URL`: JWKS endpoint for public key discovery (required for JWT flow)
+- `OAUTH_BASE_URL`: OAuth provider base URL
+- `OAUTH_FLOW`: Selects the token validation flow. Use `'jwt'` for JWT validation (with JWKS), `'opaque'` for API token validation (e.g., GitHub, generic OAuth providers)
+- `OAUTH_OPAQUE_USER_API`: (Optional) API endpoint for validating opaque tokens (default: GitHub user API)
+
+**HTTP Transport Configuration (Optional):**
+
+- `MCP_HTTP_PORT`: Port for HTTP transport (default: 3300)
+- `MCP_HTTP_HOST`: Host for HTTP transport (default: localhost)
+
+## Authentication Modes
+
+- If all OAuth MCP variables are set, the server enforces OAuth authentication for HTTP transport.
+- If any are missing, the server runs in unauthenticated mode (no token required).
+- The protected resource metadata endpoint (`/mcp/.well-known/oauth-protected-resource`) is only available in authenticated mode.
 
 ## Usage
 

@@ -3,6 +3,7 @@ import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/
 import cors from "cors";
 import express, { Request, Response } from "express";
 import { randomUUID } from "node:crypto";
+import { validateAccessToken } from '../auth/token-validator.js';
 
 export async function startHttpTransport(
     server: Server,
@@ -24,6 +25,85 @@ export async function startHttpTransport(
 
     // Map to store transports by session ID
     const transports: { [sessionId: string]: StreamableHTTPServerTransport } = {};
+
+    // Determine if OAuth is enabled
+    const oauthEnabled = Boolean(
+        process.env.OAUTH_MCP_RESOURCE &&
+        process.env.OAUTH_AUTH_URL &&
+        process.env.OAUTH_BASE_URL &&
+        process.env.OAUTH_JWKS_URL &&
+        process.env.OAUTH_TOKEN_URL
+    );
+
+    if (oauthEnabled) {
+        console.log('MCP HTTP server: OAuth authentication ENABLED');
+    } else {
+        console.log('MCP HTTP server: OAuth authentication DISABLED');
+    }
+
+    // Conditionally add MCP OAuth authentication middleware
+    if (oauthEnabled) {
+        app.use('/mcp', async (req: Request, res: Response, next) => {
+            if (!['POST', 'GET', 'DELETE'].includes(req.method)) return next();
+            const authHeader = req.headers['authorization'];
+            if (!authHeader || !authHeader.startsWith('Bearer ')) {
+                res.setHeader('WWW-Authenticate', `Bearer realm="MCP", resource_metadata="/mcp/.well-known/oauth-protected-resource"`);
+                return res.status(401).json({
+                    jsonrpc: '2.0',
+                    error: {
+                        code: -32001,
+                        message: 'Unauthorized: Missing or invalid access token',
+                    },
+                    id: null,
+                });
+            }
+            const token = authHeader.slice('Bearer '.length);
+            const flow = process.env.OAUTH_FLOW || 'jwt';
+            let validationOptions: any = {};
+            if (flow === 'jwt') {
+                validationOptions.jwksUri = process.env.OAUTH_JWKS_URL;
+                validationOptions.expectedAudience = process.env.OAUTH_MCP_RESOURCE;
+            } else if (flow === 'opaque') {
+                validationOptions.opaqueUserApi = process.env.OAUTH_OPAQUE_USER_API || 'https://api.github.com/user';
+            }
+            try {
+                const result = await validateAccessToken(token, flow, validationOptions);
+                if (!result.valid) throw new Error(result.reason || 'Invalid token');
+                // Optionally attach user info to request
+                (req as any).user = result.payload;
+                next();
+            } catch (err) {
+                res.setHeader('WWW-Authenticate', `Bearer realm="MCP", resource_metadata="/mcp/.well-known/oauth-protected-resource"`);
+                return res.status(401).json({
+                    jsonrpc: '2.0',
+                    error: {
+                        code: -32001,
+                        message: `Unauthorized: ${err instanceof Error ? err.message : 'Invalid access token'}`,
+                    },
+                    id: null,
+                });
+            }
+        });
+    } else {
+        console.warn('MCP OAuth authentication is DISABLED (missing OAUTH_MCP_RESOURCE or OAuth envs)');
+    }
+
+    // MCP protected resource metadata endpoint
+    app.get('/mcp/.well-known/oauth-protected-resource', (req: Request, res: Response) => {
+        if (!oauthEnabled) {
+            return res.status(404).json({ error: 'OAuth metadata not available: server is running unauthenticated.' });
+        }
+        // Per RFC9728, return JSON with authorization_servers field
+        res.json({
+            resource: process.env.OAUTH_MCP_RESOURCE,
+            authorization_servers: [process.env.OAUTH_AUTH_URL],
+            issuer: process.env.OAUTH_BASE_URL,
+            jwks_uri: process.env.OAUTH_JWKS_URL,
+            token_endpoint: process.env.OAUTH_TOKEN_URL,
+            response_types_supported: ['code', 'token'],
+            grant_types_supported: ['authorization_code', 'client_credentials'],
+        });
+    });
 
     // Handle POST requests for client-to-server communication
     app.post('/mcp', async (req: Request, res: Response) => {

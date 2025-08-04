@@ -67,6 +67,7 @@ This is a Model Context Protocol (MCP) server for Microsoft Dynamics 365 CRM. It
 
 ### Package Management Guidelines
 
+- **Always check for existing packages before adding new ones.** Prefer using already installed libraries (e.g., axios) for new features or integrations.
 - **Use the most recent compatible versions** when adding new packages
 - Check for latest stable versions before installing dependencies
 - Update package versions regularly to maintain security and compatibility
@@ -130,19 +131,40 @@ test-integration/     # Integration test files (not committed to git)
 
 ### Environment Variables
 
-Required for Dynamics 365 connection:
+Required for Dynamics 365 connection and MCP authentication:
 
-```
-D365_BASE_URL=https://your-org.crm.dynamics.com
-D365_CLIENT_ID=your-client-id
-D365_CLIENT_SECRET=your-client-secret
-D365_TENANT_ID=your-tenant-id
-D365_RESOURCE=https://your-org.crm.dynamics.com
+```env
+# Dynamics 365 CRM (Backend API)
+D365_BASE_URL=https://your-org.crm.dynamics.com         # Your Dynamics 365 organization URL
+D365_CLIENT_ID=your-client-id                          # Azure AD application client ID
+D365_CLIENT_SECRET=your-client-secret                  # Azure AD application client secret
+D365_TENANT_ID=your-tenant-id                         # Azure AD tenant ID
+D365_RESOURCE=https://your-org.crm.dynamics.com        # Resource URL for Dynamics 365 API
+
+# MCP OAuth Resource & Provider (Authentication)
+# Only required for HTTP transport (not needed for stdio transport)
+OAUTH_MCP_RESOURCE=https://your-mcp-resource.example.com   # Resource identifier exposed to MCP clients (OAuth audience)
+OAUTH_AUTH_URL=https://login.microsoftonline.com/your-tenant-id/oauth2/v2.0/authorize   # OAuth 2.0 authorization endpoint
+OAUTH_TOKEN_URL=https://login.microsoftonline.com/your-tenant-id/oauth2/v2.0/token      # OAuth 2.0 token endpoint
+OAUTH_JWKS_URL=https://login.microsoftonline.com/your-tenant-id/discovery/v2.0/keys     # JWKS endpoint for public key discovery
+OAUTH_BASE_URL=https://login.microsoftonline.com/your-tenant-id/v2.0                    # OAuth provider base URL
 
 # HTTP Transport Configuration (Optional)
 MCP_HTTP_PORT=3300        # Default port for HTTP transport
 MCP_HTTP_HOST=localhost   # Default host for HTTP transport
 ```
+
+**Variable Explanations:**
+
+- `D365_*` variables: Used for backend API calls to Dynamics 365 CRM.
+- `OAUTH_MCP_RESOURCE` and `OAUTH_*` variables: Used for MCP server authentication and metadata exposure.
+- `MCP_HTTP_PORT`, `MCP_HTTP_HOST`: Configure HTTP transport for local/remote development.
+
+**Authentication Modes:**
+
+- If all OAuth MCP variables are set, the server enforces OAuth authentication for HTTP transport.
+- If any are missing, the server runs in unauthenticated mode (no token required).
+- The protected resource metadata endpoint (`/mcp/.well-known/oauth-protected-resource`) is only available in authenticated mode.
 
 ### Default Configuration
 
