@@ -15,7 +15,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New environment variables for authentication:
   - `OAUTH_FLOW` to select validation mode (`jwt` or `opaque`)
   - `OAUTH_OPAQUE_USER_API` for custom API endpoint validation
-- Token validation logic refactored into a dedicated module
+  - `OAUTH_TOKEN_CACHE_DURATION_MS` for configurable token cache duration
+- Token validation logic refactored into a dedicated module with in-memory caching
+- In-memory caching for JWKS and user API responses (configurable duration, default 24 hours)
 - Updated authentication documentation and example configs
 - Extension README now links to main README for authentication setup
 - Example configuration for both JWT and opaque flows

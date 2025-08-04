@@ -164,6 +164,7 @@ OAUTH_JWKS_URL=https://api.github.com/meta  # GitHub does not provide JWKS, so u
 OAUTH_BASE_URL=https://github.com
 OAUTH_FLOW=opaque  # Supported values: 'jwt' (for JWT validation), 'opaque' (for API token validation)
 OAUTH_OPAQUE_USER_API=https://api.github.com/user  # Optional: endpoint for opaque token validation
+OAUTH_TOKEN_CACHE_DURATION_MS=86400000  # Optional: token validation cache duration in milliseconds (default: 24 hours)
 
 # HTTP Transport Configuration (Optional)
 MCP_HTTP_PORT=3300        # Port for HTTP transport (default: 3300)
@@ -188,6 +189,8 @@ MCP_HTTP_HOST=localhost   # Host for HTTP transport (default: localhost)
 - `OAUTH_JWKS_URL`: JWKS endpoint for public key discovery (required for JWT flow)
 - `OAUTH_BASE_URL`: OAuth provider base URL
 - `OAUTH_FLOW`: Selects the token validation flow. Use `'jwt'` for JWT validation (with JWKS), `'opaque'` for API token validation (e.g., GitHub, generic OAuth providers)
+  - `opaque` was tested with github
+  - `jwt` was NOT untested yet
 - `OAUTH_OPAQUE_USER_API`: (Optional) API endpoint for validating opaque tokens (default: GitHub user API)
 
 **HTTP Transport Configuration (Optional):**
