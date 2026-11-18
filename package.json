@@ -21,7 +21,7 @@
     "clean": "rm -rf dist",
     "lint": "tsc --noEmit",
     "typecheck": "tsc --noEmit",
-    "test": "node tests/unit/test-server.js",
+    "test": "node tests/unit/test-server.js && node tests/unit/test-odata.js",
     "test:read-tools": "pnpm run build && node tests/integration/test-read-tools.js",
     "test:http": "pnpm run build && node tests/integration/test-streamable-http.js",
     "convert-icon": "npx sharp-cli -i vscode-extension/images/icon.svg -o vscode-extension/images/icon.png resize 128 128",
