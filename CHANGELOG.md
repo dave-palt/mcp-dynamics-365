@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Security
+
+- Updated dependencies to fix known advisories (`@modelcontextprotocol/sdk` 1.32.2, `axios` 1.21.1, `express` 5.3.0, `jsonwebtoken` 9.0.3)
+
+### Changed
+
+- Minimum Node.js version is now 22
+- CI and release workflows run on Node 22 with current GitHub Actions versions
+
 ## [2.1.0] - 2025-08-04
 
 ### Authentication (High Priority)
