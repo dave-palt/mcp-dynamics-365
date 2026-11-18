@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import { D365AuthService } from "./auth.js";
+import { assertGuid, assertIdentifier, odataStringLiteral } from "./odata.js";
 import {
   D365ApiResponse,
   D365AttributeMetadata,
@@ -33,7 +34,7 @@ export class D365ApiClient {
 
       if (includeAttributes) {
         // Get full entity definition with attributes
-        const url = `${this.baseUrl}/api/data/v9.2/EntityDefinitions?$filter=LogicalName eq '${entityName}'&$expand=Attributes($select=LogicalName,DisplayName,AttributeType,IsPrimaryId,RequiredLevel,Description)`;
+        const url = `${this.baseUrl}/api/data/v9.2/EntityDefinitions?$filter=LogicalName eq '${odataStringLiteral(entityName)}'&$expand=Attributes($select=LogicalName,DisplayName,AttributeType,IsPrimaryId,RequiredLevel,Description)`;
 
         const response = await axios.get(url, { headers });
         const entityDefs = response.data.value;
@@ -80,7 +81,7 @@ export class D365ApiClient {
         };
       } else {
         // Get basic entity definition without attributes
-        const url = `${this.baseUrl}/api/data/v9.2/EntityDefinitions?$filter=LogicalName eq '${entityName}'&$select=LogicalName,LogicalCollectionName,DisplayName,Description,PrimaryIdAttribute`;
+        const url = `${this.baseUrl}/api/data/v9.2/EntityDefinitions?$filter=LogicalName eq '${odataStringLiteral(entityName)}'&$select=LogicalName,LogicalCollectionName,DisplayName,Description,PrimaryIdAttribute`;
 
         const response = await axios.get(url, { headers });
         const entityDefs = response.data.value;
@@ -128,7 +129,7 @@ export class D365ApiClient {
       const headers = await this.authService.getAuthHeaders();
 
       // Get detailed attribute definition
-      let url = `${this.baseUrl}/api/data/v9.2/EntityDefinitions(LogicalName='${entityName}')/Attributes(LogicalName='${attributeName}')`;
+      let url = `${this.baseUrl}/api/data/v9.2/EntityDefinitions(LogicalName='${odataStringLiteral(entityName)}')/Attributes(LogicalName='${odataStringLiteral(attributeName)}')`;
 
       // First, get basic attribute info to determine type
       let response = await axios.get(url, { headers });
@@ -153,7 +154,7 @@ export class D365ApiClient {
               ? "Microsoft.Dynamics.CRM.StateAttributeMetadata"
               : "Microsoft.Dynamics.CRM.StatusAttributeMetadata";
 
-        url = `${this.baseUrl}/api/data/v9.2/EntityDefinitions(LogicalName='${entityName}')/Attributes(LogicalName='${attributeName}')/${castType}?$expand=OptionSet`;
+        url = `${this.baseUrl}/api/data/v9.2/EntityDefinitions(LogicalName='${odataStringLiteral(entityName)}')/Attributes(LogicalName='${odataStringLiteral(attributeName)}')/${castType}?$expand=OptionSet`;
         response = await axios.get(url, { headers });
         attributeDef = response.data;
       }
@@ -305,7 +306,7 @@ export class D365ApiClient {
     try {
       const headers = await this.authService.getAuthHeaders();
       const queryParams = this.buildQueryParams(options);
-      const url = `${this.baseUrl}/api/data/v9.2/${entitySet}${queryParams}`;
+      const url = `${this.baseUrl}/api/data/v9.2/${assertIdentifier(entitySet, "entity set")}${queryParams}`;
 
       const response = await axios.get(url, { headers });
 
@@ -332,8 +333,8 @@ export class D365ApiClient {
   ): Promise<D365ApiResponse<any>> {
     try {
       const headers = await this.authService.getAuthHeaders();
-      const selectParam = select ? `?$select=${select.join(",")}` : "";
-      const url = `${this.baseUrl}/api/data/v9.2/${entitySet}(${id})${selectParam}`;
+      const selectParam = select ? `?$select=${select.map((c) => assertIdentifier(c, "column")).join(",")}` : "";
+      const url = `${this.baseUrl}/api/data/v9.2/${assertIdentifier(entitySet, "entity set")}(${assertGuid(id)})${selectParam}`;
 
       const response = await axios.get(url, { headers });
 
@@ -359,7 +360,7 @@ export class D365ApiClient {
   ): Promise<D365ApiResponse<any>> {
     try {
       const headers = await this.authService.getAuthHeaders();
-      const url = `${this.baseUrl}/api/data/v9.2/${entitySet}`;
+      const url = `${this.baseUrl}/api/data/v9.2/${assertIdentifier(entitySet, "entity set")}`;
 
       const response = await axios.post(url, data, { headers });
 
@@ -386,7 +387,7 @@ export class D365ApiClient {
   ): Promise<D365ApiResponse<any>> {
     try {
       const headers = await this.authService.getAuthHeaders();
-      const url = `${this.baseUrl}/api/data/v9.2/${entitySet}(${id})`;
+      const url = `${this.baseUrl}/api/data/v9.2/${assertIdentifier(entitySet, "entity set")}(${assertGuid(id)})`;
 
       const response = await axios.patch(url, data, { headers });
 
@@ -412,7 +413,7 @@ export class D365ApiClient {
   ): Promise<D365ApiResponse<any>> {
     try {
       const headers = await this.authService.getAuthHeaders();
-      const url = `${this.baseUrl}/api/data/v9.2/${entitySet}(${id})`;
+      const url = `${this.baseUrl}/api/data/v9.2/${assertIdentifier(entitySet, "entity set")}(${assertGuid(id)})`;
 
       const response = await axios.delete(url, { headers });
 
@@ -496,7 +497,7 @@ export class D365ApiClient {
     const params: string[] = [];
 
     if (options.select) {
-      params.push(`$select=${options.select.join(",")}`);
+      params.push(`$select=${options.select.map((c) => assertIdentifier(c, "column")).join(",")}`);
     }
 
     if (options.filter) {
@@ -508,11 +509,11 @@ export class D365ApiClient {
     }
 
     if (options.top) {
-      params.push(`$top=${options.top}`);
+      params.push(`$top=${Number(options.top)}`);
     }
 
     if (options.skip) {
-      params.push(`$skip=${options.skip}`);
+      params.push(`$skip=${Number(options.skip)}`);
     }
 
     if (options.expand) {
