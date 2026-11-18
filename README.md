@@ -107,7 +107,7 @@ Or, if you need to use OAuth authentication (for protected servers):
 
 ## Prerequisites
 
-- Node.js 18+
+- Node.js 22+
 - pnpm (recommended package manager)
 - Dynamics 365 CRM instance
 - Azure AD app registration with appropriate permissions
